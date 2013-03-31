@@ -549,7 +549,6 @@ SPI.DeviceList["spi_rpi_ui"]= RPi_Ui_20x4
 class RPi_Ui_16x2(LCD_20x4,Ui_PushButtons, IOPinBase):
     DefaultAddress = 0x94
     IOPins=2
-    DefaultAddress = 0x94
     IODevice = ATMega
     ADSamples = 4096
     ADBitshift = 6
