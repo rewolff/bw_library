@@ -20,6 +20,7 @@ i2c-version of the boards)
 
 Install:
 
+	sudo apt-get install python-smbus
 	sudo python setup.py install
 
 see examples dir for examples 
