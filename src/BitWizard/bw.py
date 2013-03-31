@@ -12,7 +12,11 @@ import time
 from fcntl import ioctl,fcntl
 import posix
 from time import sleep
-from smbus import SMBus
+
+try:
+    from smbus import SMBus
+except:
+    pass
 
 class ATTiny():
     ADCChannelConfig = {0:0x07,1:0x03,3:0x2,4:0x01,6:0x00}
@@ -43,7 +47,13 @@ class I2C:
                 self.InUseBy.Ident=VersionStrip
 
     def __init__(self,device=0):
-        self.I2cBus = SMBus(device)
+        try:
+            self.I2cBus = SMBus(device)
+        except :
+            print 'Need python-smbus for I2C bus to work'
+            print ''
+            print 'To install: sudo apt-get install python-smbus'
+            return None
 
     def Close(self):
         self.I2cBus.close()
