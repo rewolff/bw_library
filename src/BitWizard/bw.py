@@ -147,7 +147,7 @@ class SPI:
         if read > len(OutBuffer):
             Transaction.len=read
         else:
-            Transaction.len = len(OutBuffer)
+            Transaction.len= len(OutBuffer)
         Transaction.bits_per_word = self.Bits
         Transaction.cs_change = 0
         Transaction.pad = 0
@@ -549,6 +549,7 @@ SPI.DeviceList["spi_rpi_ui"]= RPi_Ui_20x4
 class RPi_Ui_16x2(LCD_20x4,Ui_PushButtons, IOPinBase):
     DefaultAddress = 0x94
     IOPins=2
+    DefaultAddress = 0x94
     IODevice = ATMega
     ADSamples = 4096
     ADBitshift = 6
@@ -562,7 +563,7 @@ class RPi_Ui_16x2(LCD_20x4,Ui_PushButtons, IOPinBase):
 
 
 class LED7Segment(BitWizardBase):
-    #DefaultAddress = 0x??
+    DefaultAddress = 0x96
 
     def SetBitmap4(self,D1=0,D2=0,D3=0,D4=0):
         return self.Bus.Transaction(chr(self.Address)+chr(0x10)+chr(D1)+chr(D2)+chr(D3)+chr(D4))
@@ -641,9 +642,56 @@ SPI.DeviceList["spi_bigrelay"]= BigRelay
 I2C.DeviceList["i2c_bigrelay"]= BigRelay      
 
 
+class Fet3(BitWizardBase,IOPinBase):
+    DefaultAddress = 0x8A
+    IOPins = 3
+    PinConfig = {}
+    PinConfig[0] = {'device':PWMOut}
+    PinConfig[1] = {'device':PWMOut}
+    PinConfig[2] = {'device':PWMOut}
+
+    def __init__(self,bus, Address=None):
+        BitWizardBase.__init__(self,bus,Address)
+        IOPinBase.__init__(self)
+
+SPI.DeviceList["spi_3fet"]= Fet3      
+I2C.DeviceList["i2c_3fet"]= Fet3      
 
 
+class Fet7(BitWizardBase,IOPinBase):
+    DefaultAddress = 0x88
+    IOPins = 7
+    PinConfig={}
+#    PinConfig[0] = {'device':PWMOut}
+#    PinConfig[1] = {'device':PWMOut}
+#    PinConfig[2] = {'device':PWMOut}
+#    PinConfig[3] = {'device':PWMOut}
+#    PinConfig[4] = {'device':PWMOut}
+#    PinConfig[5] = {'device':PWMOut}
+#    PinConfig[6] = {'device':PWMOut}
 
+    def __init__(self,bus, Address=None):
+        BitWizardBase.__init__(self,bus,Address)
+        IOPinBase.__init__(self)
+
+    def SetCurrentPosition(self,pos):
+        self.Bus.Transaction(chr(self.Address)+chr(0x40)+struct.pack('@l',pos))
+
+    def SetTargetPosition(self,pos):
+        self.Bus.Transaction(chr(self.Address)+chr(0x41)+struct.pack('@l',pos))
+
+    def SetRelativePosition(self,pos):
+        self.Bus.Transaction(chr(self.Address)+chr(0x42)+struct.pack('@l',pos))
+
+    def SetStepDelay(self,delay=200):
+        self.Bus.Transaction(chr(self.Address)+chr(0x43)+chr(delay))
+
+    def GetCurrentPosition(self):
+        r,v = self.Bus.Transaction(chr(self.Address+1)+chr(0x40),0x06)
+        return struct.unpack('@l', v[2:6])[0]
+                             
+SPI.DeviceList["spi_7fet"]= Fet7      
+I2C.DeviceList["i2c_7fet"]= Fet7      
 
 
 
