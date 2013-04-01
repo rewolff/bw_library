@@ -586,7 +586,7 @@ class LED7Segment(BitWizardBase):
         return self.Bus.Transaction(chr(self.Address)+chr(0x11)+chr(D1)+chr(D2)+chr(D3)+chr(D4))
 
     def SetHex1(self,char, value=0):
-        return self.Bus.Transaction(chr(self.Address)+chr(0x29+char)+chr(value))
+        return self.Bus.Transaction(chr(self.Address)+chr(0x30+char)+chr(value))
 
 
     def BottomDot(self,on=True):
