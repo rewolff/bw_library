@@ -180,7 +180,7 @@ class SPI:
         if ret == -1:
             print "can't set max speed hz"
 
-#    def GetSpeed(Self):
+#    def GetSpeed(self):
 #        ret = ioctl(lcd, SPI_IOC_RD_MAX_SPEED_HZ, addressof(self.Speed));
 #        if ret == -1:
 #            print "can't get max speed hz"
@@ -667,42 +667,80 @@ class Fet3(BitWizardBase,IOPinBase):
 SPI.DeviceList["spi_3fet"]= Fet3      
 I2C.DeviceList["i2c_3fet"]= Fet3      
 
+class StepperMotor:
 
-class Fet7(BitWizardBase,IOPinBase):
+    class StepperPin(IOPin):
+        IO=1
+
+    def StepperInit(self,StepAngle=1.0,Reduction=1.0, North=0, StepDelay=200 ,CurrentPosition=None,Reverse=False):
+        self.StepAngle = StepAngle
+        self.Reduction = Reduction
+        self.North = North
+        for p in range(4):
+            self.SetPinConfig(p,StepperMotor.StepperPin)
+        self.SetStepDelay(StepDelay)
+        if CurrentPosition!=None:
+            self.SetCurrentPosition(CurrentPosition)
+            
+    def DegreeToSteps(self,Degree):
+        return int(round(Degree*(self.Reduction/self.StepAngle/2)))
+
+    def StepsToDegree(self,Steps):
+        return int(round(Steps/(self.Reduction/self.StepAngle/2)))
+    
+    def SetCurrentPosition(self,pos):
+        self.Bus.Transaction(chr(self.Address)+chr(0x40)+struct.pack('@l',pos))
+
+    def GetCurrentPosition(self):
+        r,v = self.Bus.Transaction(chr(self.Address+1)+chr(0x40),0x06)
+        return struct.unpack('@l', v[2:6])[0]
+
+    def GetCurrentDegree(self):
+        return self.StepsToDegree(self.GetCurrentPosition())
+
+    def SetTargetPosition(self,pos):
+        self.Bus.Transaction(chr(self.Address)+chr(0x41)+struct.pack('@l',pos))
+
+    def GetTargetPosition(self):
+        return struct.unpack('@l',self.Bus.Transaction(chr(self.Address+1)+chr(0x41),0x06))
+
+    def SetTargetDegree(self,Degree):
+        self.SetTargetPosition(self.DegreeToSteps(Degree))
+
+    def GetTargetDegree(self):
+        return self.StepsToDegree(self.GetTargetPosition())
+
+    def SetRelativePosition(self,pos):
+        self.Bus.Transaction(chr(self.Address)+chr(0x42)+struct.pack('@l',pos))
+
+    def SetRelativeDegree(self,Degree):
+        self.SetRelativePosition(self.DegreeToSteps(Degree))
+
+    def SetStepDelay(self,delay=200):
+        self.Bus.Transaction(chr(self.Address)+chr(0x43)+chr(delay))
+
+    def GetStepDelay(self):
+        self.Bus.Transaction(chr(self.Address+1)+Chr(0x43),0x3)
+
+
+class Fet7(BitWizardBase,IOPinBase,StepperMotor):
     DefaultAddress = 0x88
     IOPins = 7
     PinConfig={}
-#    PinConfig[0] = {'device':PWMOut}
-#    PinConfig[1] = {'device':PWMOut}
-#    PinConfig[2] = {'device':PWMOut}
-#    PinConfig[3] = {'device':PWMOut}
-#    PinConfig[4] = {'device':PWMOut}
-#    PinConfig[5] = {'device':PWMOut}
-#    PinConfig[6] = {'device':PWMOut}
+    PinConfig[0] = {'device':PWMOut}
+    PinConfig[1] = {'device':PWMOut}
+    PinConfig[2] = {'device':PWMOut}
+    PinConfig[3] = {'device':PWMOut}
+    PinConfig[4] = {'device':PWMOut}
+    PinConfig[5] = {'device':PWMOut}
+    PinConfig[6] = {'device':PWMOut}
 
     def __init__(self,bus, Address=None):
         BitWizardBase.__init__(self,bus,Address)
         IOPinBase.__init__(self)
 
-    def SetCurrentPosition(self,pos):
-        self.Bus.Transaction(chr(self.Address)+chr(0x40)+struct.pack('@l',pos))
-
-    def SetTargetPosition(self,pos):
-        self.Bus.Transaction(chr(self.Address)+chr(0x41)+struct.pack('@l',pos))
-
-    def SetRelativePosition(self,pos):
-        self.Bus.Transaction(chr(self.Address)+chr(0x42)+struct.pack('@l',pos))
-
-    def SetStepDelay(self,delay=200):
-        self.Bus.Transaction(chr(self.Address)+chr(0x43)+chr(delay))
-
-    def GetCurrentPosition(self):
-        r,v = self.Bus.Transaction(chr(self.Address+1)+chr(0x40),0x06)
-        return struct.unpack('@l', v[2:6])[0]
                              
 SPI.DeviceList["spi_7fet"]= Fet7      
 I2C.DeviceList["i2c_7fet"]= Fet7      
-
-
 
 
