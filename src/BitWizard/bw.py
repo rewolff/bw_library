@@ -7,6 +7,7 @@
 
 from spi_ctypes import *
 from ctypes import *
+
 import struct
 import time
 from fcntl import ioctl,fcntl
@@ -32,42 +33,42 @@ class NET(object):
     Port = 50000
     Server=None
     Socket=None
-
+    TCPServer = None
+    
     def _NetTransaction(self,OutBuffer,read=0):
-        print '_NetTransaction'
-        self.Socket=None
+        buf='  '
         if self.Socket == None:
-            self.Socket=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.Socket.connect((self.Server,self.Port))
+            self.NetInit()
         if self.Socket != None:
             bsend = self.Socket.send(OutBuffer)
             if bsend == len(OutBuffer):
-                return 0,self.Socket.recv(2+read)
-        return 0,"  "
+                buf =self.Socket.recv(2+read)
+            self.Socket.close()
+            self.Socket=None
+        return 0,buf
                 
     def RequestHandler(self,Socket):
-        print 'received transaction'
         OutBuffer=Socket.recv(100)
         r,b = self.Transaction(OutBuffer)
         Socket.send(b)
-        #Socket.shutdown()
-        Socket.close()
+
+    def NetInit(self):
+        self.Socket=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.Socket.connect((self.Server,self.Port))
         
     def ListenerTread(self):
-        print "Listener starting"
         self.Socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.Socket.bind((socket.gethostname(),self.Port))
         self.Socket.listen(5)
         while 1:
-            print 'tick'
             C, A = self.Socket.accept()
-            print 'got connection from ',A
-            t = threading.Thread(target = self.RequestHandler, args=(C,))
-            t.start()
+            self.TCPServer = threading.Thread(target = self.RequestHandler, args=(C,))
+            self.TCPServer.start()
 
     def __del__(self):
+        if self.TCPServer != None:
+            self.TCPServer = None
         if self.Socket != None:
-            #self.Socket.shutdown()
             self.Socket.close()
     
 class I2C(NET):
@@ -96,14 +97,10 @@ class I2C(NET):
         #  On  
         self.Port = Port
         self.Server=Server
-        if self.Server != None:
-            print 'TCP/IP Client mode'
-            Self.Transaction=self._NetTransaction
+        if self.Server != None:  # TCP Client mode
+            self.NetInit()
+            self.Transaction=self._NetTransaction
         else:
-            if self.Port != None:
-                print 'Init server'
-                self.ServerThread = threading.Thread(target=self.ListenerTread)
-                self.ServerThread.start()
             try:
                 self.I2cBus = SMBus(device)
             except :
@@ -111,6 +108,9 @@ class I2C(NET):
                 print ''
                 print 'To install: sudo apt-get install python-smbus'
                 return None
+            if self.Port != None: #TCP Server Mode
+                self.ServerThread = threading.Thread(target=self.ListenerTread)
+                self.ServerThread.start()
 
     def Close(self):
         self.I2cBus.close()
@@ -183,11 +183,9 @@ class SPI(NET):
         self.Port = Port
         self.Server=Server
         if self.Server != None:
-            print 'TCP/IP Client Mode'
             self.Transaction=self._NetTransaction
         else:
-            if self.Port != None:
-                print 'init server Thread' 
+            if self.Port != None: # Init Server Thread
                 self.ServerThread = threading.Thread(target=self.ListenerTread)
                 self.ServerThread.start()
             self.Bits = c_uint8(bits)
