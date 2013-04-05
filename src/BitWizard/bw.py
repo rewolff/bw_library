@@ -183,7 +183,7 @@ class SPI(NET):
         self.Server=Server
         if self.Server != None:
             print 'TCP/IP Client Mode'
-            Self.Transaction=self._NetTransaction
+            self.Transaction=self._NetTransaction
         else:
             if self.Port != None:
                 print 'init server Thread' 
