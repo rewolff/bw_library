@@ -180,7 +180,7 @@ class SPI(NET):
             bits   = Number of bits in a data word, default = 8
         """
         self.Port = Port
-        self.Server=None
+        self.Server=Server
         if self.Server != None:
             print 'TCP/IP Client Mode'
             Self.Transaction=self._NetTansaction
