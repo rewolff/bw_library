@@ -39,7 +39,7 @@ class NET(object):
             self.Socket=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.Socket.connect((self.Server,self.Port))
         if self.Socket != None:
-            bsend = self.Socket.sent(OutBuffer)
+            bsend = self.Socket.send(OutBuffer)
             if bsend == len(OutBuffer):
                 return self.Socket.recv(2+read)
         return 0,"  "
