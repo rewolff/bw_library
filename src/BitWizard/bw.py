@@ -35,13 +35,14 @@ class NET(object):
 
     def _NetTransaction(self,OutBuffer,read=0):
         print '_NetTransaction'
+        self.Socket=None
         if self.Socket == None:
             self.Socket=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.Socket.connect((self.Server,self.Port))
         if self.Socket != None:
             bsend = self.Socket.send(OutBuffer)
             if bsend == len(OutBuffer):
-                return self.Socket.recv(2+read)
+                return 0,self.Socket.recv(2+read)
         return 0,"  "
                 
     def RequestHandler(self,Socket):
@@ -49,7 +50,7 @@ class NET(object):
         OutBuffer=Socket.recv(100)
         r,b = self.Transaction(OutBuffer)
         Socket.send(b)
-        Socket.Shutdown()
+        #Socket.shutdown()
         Socket.close()
         
     def ListenerTread(self):
@@ -66,7 +67,7 @@ class NET(object):
 
     def __del__(self):
         if self.Socket != None:
-            self.Socket.shutdown()
+            #self.Socket.shutdown()
             self.Socket.close()
     
 class I2C(NET):
