@@ -12,6 +12,8 @@ import time
 from fcntl import ioctl,fcntl
 import posix
 from time import sleep
+import socket
+import threading
 
 try:
     from smbus import SMBus
@@ -26,7 +28,48 @@ class ATMega():
     ADCChannelConfig = {0:0x47,1:0x46}
     AddFor1V1 = 0x80
 
-class I2C:
+class NET(object):
+    Port = 50000
+    Server=None
+    Socket=None
+
+    def _NetTransaction(self,OutBuffer,read=0):
+        print '_NetTransaction'
+        if self.Socket == None:
+            self.Socket=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.Socket.connect((self.Server,self.Port))
+        if self.Socket != None:
+            bsend = self.Socket.sent(OutBuffer)
+            if bsend == len(OutBuffer):
+                return self.Socket.recv(2+read)
+        return 0,"  "
+                
+    def RequestHandler(self,Socket):
+        print 'received transaction'
+        OutBuffer=Socket.recv(100)
+        r,b = self.Transaction(OutBuffer)
+        Socket.send(b)
+        Socket.Shutdown()
+        Socket.close()
+        
+    def ListenerTread(self):
+        print "Listener starting"
+        self.Socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.Socket.bind((socket.gethostname(),self.Port))
+        self.Socket.listen(5)
+        while 1:
+            print 'tick'
+            C, A = self.Socket.accept()
+            print 'got connection from ',A
+            t = threading.Thread(target = self.RequestHandler, args=(C,))
+            t.start()
+
+    def __del__(self):
+        if self.Socket != None:
+            self.Socket.shutdown()
+            self.Socket.close()
+    
+class I2C(NET):
     Devices = {}
     DeviceList= {}
     class Device():
@@ -46,14 +89,27 @@ class I2C:
             if self.InUseBy!=None:
                 self.InUseBy.Ident=VersionStrip
 
-    def __init__(self,device=0):
-        try:
-            self.I2cBus = SMBus(device)
-        except :
-            print 'Need python-smbus for I2C bus to work'
-            print ''
-            print 'To install: sudo apt-get install python-smbus'
-            return None
+    def __init__(self,device=0,Port=None,Server=None):
+        #  ToDo
+        #  Ckeck for Raspberry Pi, and its version in /Proc/CPUInfo
+        #  On  
+        self.Port = Port
+        self.Server=None
+        if self.Server != None:
+            print 'TCP/IP Client mode'
+            Self.Transaction=self._NetTansaction
+        else:
+            if self.Port != None:
+                print 'Init server'
+                self.ServerThread = threading.Thread(target=self.ListenerTread)
+                self.ServerThread.start()
+            try:
+                self.I2cBus = SMBus(device)
+            except :
+                print 'Need python-smbus for I2C bus to work'
+                print ''
+                print 'To install: sudo apt-get install python-smbus'
+                return None
 
     def Close(self):
         self.I2cBus.close()
@@ -93,7 +149,7 @@ class I2C:
 
 
 
-class SPI:
+class SPI(NET):
     """class respresenting an SPI Bus"""
     ReadSpeed = 50000
     WriteSpeed = 100000
@@ -116,20 +172,30 @@ class SPI:
             if self.InUseBy!=None:
                 self.Ident=VersionStrip
     
-    def __init__(self, device = '/dev/spidev0.0', delay = 40, speed = 50000, bits = 8):
+    def __init__(self, device = '/dev/spidev0.0', delay = 40, speed = 50000, bits = 8,Port=None,Server=None):
         """
             device = any SPI-Bus device in /dev, default /dev/spidev0.0
             delay  = SPI Bus delay between transactions in ms, default 0
             speed  = set the Bus Speed (Obsolete)
             bits   = Number of bits in a data word, default = 8
         """
-        self.Bits = c_uint8(bits)
-        self.Speed = self.WriteSpeed
-        self.Delay = c_uint16(delay)
-        self.Device = device
-        self.File = posix.open(self.Device, posix.O_RDWR)
-        self.SetBits()
-        self.SetSpeed()
+        self.Port = Port
+        self.Server=None
+        if self.Server != None:
+            print 'TCP/IP Client Mode'
+            Self.Transaction=self._NetTansaction
+        else:
+            if self.Port != None:
+                print 'init server Thread' 
+                self.ServerThread = threading.Thread(target=self.ListenerTread)
+                self.ServerThread.start()
+            self.Bits = c_uint8(bits)
+            self.Speed = self.WriteSpeed
+            self.Delay = c_uint16(delay)
+            self.Device = device
+            self.File = posix.open(self.Device, posix.O_RDWR)
+            self.SetBits()
+            self.SetSpeed()
         
     def Close(self):
         """ Close the filehandle to this bus """ 
@@ -675,6 +741,7 @@ class StepperMotor:
     def StepperInit(self,StepAngle=1.0,Reduction=1.0, North=0, StepDelay=200 ,CurrentPosition=None,Reverse=False):
         self.StepAngle = StepAngle
         self.Reduction = Reduction
+        self.Reverse = Reverse
         self.North = North
         for p in range(4):
             self.SetPinConfig(p,StepperMotor.StepperPin)
@@ -689,20 +756,30 @@ class StepperMotor:
         return int(round(Steps/(self.Reduction/self.StepAngle/2)))
     
     def SetCurrentPosition(self,pos):
+        if self.Reverse: pos*=-1
         self.Bus.Transaction(chr(self.Address)+chr(0x40)+struct.pack('@l',pos))
 
     def GetCurrentPosition(self):
         r,v = self.Bus.Transaction(chr(self.Address+1)+chr(0x40),0x06)
-        return struct.unpack('@l', v[2:6])[0]
+        if self.Reverse:
+           r=-1
+        else:
+            r=1
+        return r*struct.unpack('@l', v[2:6])[0]
 
     def GetCurrentDegree(self):
         return self.StepsToDegree(self.GetCurrentPosition())
 
     def SetTargetPosition(self,pos):
+        if self.Reverse: pos*=-1
         self.Bus.Transaction(chr(self.Address)+chr(0x41)+struct.pack('@l',pos))
 
     def GetTargetPosition(self):
-        return struct.unpack('@l',self.Bus.Transaction(chr(self.Address+1)+chr(0x41),0x06))
+        if self.Reverse:
+           r=-1
+        else:
+            r=1
+        return r*struct.unpack('@l',z.Bus.Transaction(chr(z.Address+1)+chr(0x41),0x06)[1][2:6])[0]
 
     def SetTargetDegree(self,Degree):
         self.SetTargetPosition(self.DegreeToSteps(Degree))
@@ -711,6 +788,7 @@ class StepperMotor:
         return self.StepsToDegree(self.GetTargetPosition())
 
     def SetRelativePosition(self,pos):
+        if self.Reverse: pos*=-1
         self.Bus.Transaction(chr(self.Address)+chr(0x42)+struct.pack('@l',pos))
 
     def SetRelativeDegree(self,Degree):
@@ -744,3 +822,11 @@ SPI.DeviceList["spi_7fet"]= Fet7
 I2C.DeviceList["i2c_7fet"]= Fet7      
 
 
+#
+# Temporary code for netbus server tests
+#
+
+if __name__ == '__main__':
+    s=SPI(Port=50000)
+    while 1:
+        sleep(.2)
