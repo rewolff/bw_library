@@ -40,16 +40,17 @@ class NET(object):
         if self.Socket == None:
             self.NetInit()
         if self.Socket != None:
-            bsend = self.Socket.send(OutBuffer)
+            bsend = self.Socket.send(struct.pack['H',read]+OutBuffer)
             if bsend == len(OutBuffer):
-                buf =self.Socket.recv(2+read)
+                print buf
+                buf =self.Socket.recv(100)
             self.Socket.close()
             self.Socket=None
         return 0,buf
                 
     def RequestHandler(self,Socket):
         OutBuffer=Socket.recv(100)
-        r,b = self.Transaction(OutBuffer)
+        r,b = self.Transaction(OutBuffer[2:],stuck.unpack('H',OutBuffer[0:2]))
         Socket.send(b)
 
     def NetInit(self):
