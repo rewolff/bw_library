@@ -40,7 +40,7 @@ class NET(object):
         if self.Socket == None:
             self.NetInit()
         if self.Socket != None:
-            bsend = self.Socket.send(struct.pack['H',read]+OutBuffer)
+            bsend = self.Socket.send(struct.pack('H',read)+OutBuffer)
             if bsend == len(OutBuffer):
                 print buf
                 buf =self.Socket.recv(100)
