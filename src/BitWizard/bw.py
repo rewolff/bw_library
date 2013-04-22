@@ -815,7 +815,7 @@ class LED7Segment(BitWizardBase):
             value=0x01
         else:
             value=0x00
-        self.Bus.Write_uInt8(self.Address,0x44,value)
+        self.Bus.Write_uInt8(self.Address,0x42,value)
 
     #TODO : Fix
     def GetBitmap4(self,D1=0,D2=0,D3=0,D4=0):
