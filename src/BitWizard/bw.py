@@ -1,8 +1,8 @@
 
 
 """
-.. module::BitWizard.bw
-   :platform: Any Unix with /dev/spidevX.X devices
+High level interface for communicating with SPI and I2C devices.
+Besides devices developed by BitWizard B.V. this library supports other devices and can be easily extended to communicate with other devices and/or devices connected to the BitWizard boards.
 """
 
 from spi_ctypes import *
@@ -32,11 +32,11 @@ Contrast    = 0x12
 Backlight   = 0x13
 InitLcd     = 0x14
 
-class ATTiny():
+class _ATTiny():
     ADCChannelConfig = {0:0x07,1:0x03,3:0x2,4:0x01,6:0x00}
     AddFor1V1 = 0x80
 
-class ATMega():
+class _ATMega():
     ADCChannelConfig = {0:0x47,1:0x46}
     AddFor1V1 = 0x80
 #
@@ -48,7 +48,7 @@ class NETPnp(object):
     
     def __init__(self,Port=50000):
         self.Port=Port
-        self.UDPServer = treading.Thread(target= self.ScanListener)
+        self.UDPServer = threading.Thread(target= self.ScanListener)
         self.UDPServer.start()
         
     def ScanListener(self):
@@ -67,13 +67,18 @@ class NETPnp(object):
         Socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         Socket.bind(('', 0))
         Socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        s.sendto("BitWizardNet",('<broadcast>',50000))
+        Socket.sendto("BitWizardNet",('<broadcast>',50000))
         
-        m,a = s.recvfrom(1000)
+        m,a = Socket.recvfrom(1000)
         print m,a
 
 
 class NET(object):
+    """
+    This class is used as a base clase for both I2C and SPI busses. It makes it possible to run an BitWizardLib based application on a computer with no I2C or SPI bus directly connected to it.
+    If you want to use this functionality, see the I@C or SPI bus Documentation.
+    @brief Baseclass for extending I2C and SPI busses over TCP/IP.
+    """
     Port = 50000
     Server=None
     Socket=None
@@ -117,13 +122,25 @@ class NET(object):
 
 
 class _Bus(object):
+    
 
     def Read_Int8(self,Address,Register):
+        """
+        @brief Read a signed Int8 
+        @param Address Byte: The address of the device
+        @param Register Byte: the register to read from
+        """
         return struct.unpack('b',self.Transaction(chr(Address+1)+chr(Register),3)[1][2])[0]
 
     def Write_Int8(self,Address,Register,Int8):
+        """
+        @brief Writea signed Int8
+        @param Address Byte: The address of the device
+        @param Register Byte: the register to read from
+        @param Int8 Byte: Data to write
+        """
         self.Transaction(chr(Address)+chr(Register)+struct.pack('b',Int8))
-    
+
     def Read_uInt8(self,Address,Register):
         return struct.unpack('B',self.Transaction(chr(Address+1)+chr(Register),3)[1][2])[0]
 
@@ -177,6 +194,7 @@ class _Bus(object):
                              
         
 class I2C(_Bus,NET):
+    "Class representing a I2C bus, locally or over TCP/IP. Use an Instance of this class as the bus parameter for any board"
     Devices = {}
     DeviceList= {}
     class Device():
@@ -197,7 +215,12 @@ class I2C(_Bus,NET):
                 self.InUseBy.Ident=VersionStrip
 
     def __init__(self,device=0,Port=None,Server=None):
-        #  TODO: Ckeck for Raspberry Pi, and its version in /Proc/CPUInfo 
+        """
+        @param device The I2C bus to use e.g. /dev/i2c-0, /dev/i2c-1 etc.
+        @param Port Default=None if set to an Integer this will be the TCP/IP port to listen on.
+        @param Server Default=None if set to a string e.g. '192.168.200.137' the bus listening on that address/port combination will be connected to.
+        @todo Ckeck for Raspberry Pi, and its version in /Proc/CPUInfo
+        """
         self.Port = Port
         self.Server=Server
         if self.Server != None:  # TCP Client mode
@@ -500,33 +523,42 @@ class BitWizardLcd(BitWizardBase):
         self.Bus.Write_uInt8(self.Address,0x01,value)
 
 class BitWizardPushButtons(BitWizardBase):
+    """
+    Base class for pushbutton devices like the Pushbutton or RPi_Ui boards. There is no need to create an instance of this class. If used as a base for another class, overWrite PushButtons to the actual number
+    """
     PushButtons = 0
-    # Read All buttons for them being pressed right now
-    # return an array of length self.PushButtons
-    # with boolean values, True when being pressed
     def ReadAll(self):
+    """
+    Read All buttons for them being pressed right now.
+    @retval an array of length self.PushButtons with boolean values, True when being pressed
+    """
         v =self.Bus.Read_uInt8(self.Address,0x10)
         Buttons = []
         for i in range(0,self.PushButtons):
             Buttons.append(v & 2**i == 2**i)
         return Buttons
 
-    # Check One button
-    # button = Buttonnumber >=0 < self.PushButtons
-    # Returns True if the button is Pressed
     def ReadOne(self,button):
+    """
+    Check One button to see if it is pressed or not.
+    @param button Int:= Buttonnumber >=0 < self.PushButtons
+    @retval True if the button is being Pressed
+    """
         return bool(self.Bus.Read_uInt8(self.Address, 0x40+button))
 
-    # Read the Status of one butten, like ReadOne
-    # Return is equal to: not self.ReadOne(button)
     def ReadOneInv(self,button):
+    """
+    Read the Status of one butten, like ReadOne
+    @retval Boolean, is equal to: not self.ReadOne(button)
+    """
         return bool(self.Bus.Read_uInt8(self.Address, 0x20+button))
 
-    # Report if any button has been pressed since this method was last called.
-    # Returns an array of length self.PushButtons with boolean values
-    # True if that button has been pressed
-    # Will reset the register
     def ReportPressed(self):
+    """
+    Report if any button has been pressed since this method was last called. Will reset the register
+    you can use this in a loop, be shure to flush the register beforehand by calling this once.
+    @retval an array of length self.PushButtons with boolean values, True if that button has been pressed
+    """
         v =self.Bus.Read_uInt8(self.Address,0x30)
         Buttons = []
         for i in range(0,self.PushButtons):
@@ -535,6 +567,9 @@ class BitWizardPushButtons(BitWizardBase):
 
 
 class IOPin():
+    """
+    Base class for implementing basic interfaces to IOPins on BitWizard Boards
+    """
     IO=0
     def __init__(self,Pin, parent):
         self.Pin=Pin
@@ -550,19 +585,34 @@ class IOPin():
 
 
 class DigitalIn(IOPin):
+    """
+    @brief Base class for communicating Digital Input Pins 
+    """
     def __init__(self,Pin,parent):
         IOPin.__init__(self,Pin,parent)
         
     def Get(self):
+        """
+        Get the current state of this pin.
+        (Broken)
+        @retval Boolean, True for Input High, False for Input Low
+        """
         value=False
         return value
     
 class DigitalOut(IOPin):
+    """
+    @brief Base class for communicating Digital Output Pins 
+    """
     IO=1
     def __init__(self,Pin,parent):
         IOPin.__init__(self,Pin,parent)
 
     def Set(self,value):
+        """
+        Set the Output value of this pin
+        @param value Boolean: True for On/False for off
+        """
         if value:
             onoff = 0x01
         else:
@@ -570,6 +620,9 @@ class DigitalOut(IOPin):
         self.Bus.Write_uInt8(self.Address,0x20+self.pin, onoff)
 
 class AnalogIn(IOPin):
+    """
+    @brief Base class for communicating Analog Input Pins 
+    """
     ADChannel = None
     Vref = 5
     def __init__(self,Pin,parent):
@@ -589,54 +642,72 @@ class AnalogIn(IOPin):
             CConfig += self.IODevice.AddFor1V1 
         self.Bus.Write_uInt8(self.Address,0x70+self.ADChannel,CConfig)
         
-    # Sample the value according to this Boards Samples/Bitshift config
-    # Retruns 16 bit value (0..65535)
     def Get(self):        
+        """
+        Sample the value according to this Boards Samples/Bitshift config
+        @retval 16 bit value (0..65535)
+        """
         return self.Bus.Read_uInt16(self.Address,0x68+self.Pin)
     
-    # take one Sample without the Boards Bitshift Config
-    # Returns 10 bit value (0..1023)
     def GetSample(self):        
+        """
+        take one Sample without the Boards Bitshift Config
+        @retval 10 bit value (0..1023)
+        """
         return self.Bus.Read_uInt16(self.Address,0x60+self.Pin)
 
     def __del__(self):
         self.ADDevice.ADCChannels-=1
 
 class MCP9700(AnalogIn):
+    """
+    @brief class representing an MCP9700 temperature Sensor to an AnalogIn IOPin
+    """
     VoltPerDegree = 0.010
     RefVoltage = 1.1000
     Vref=1    
 
-    # Return Current Temperature value as float in Degree Celcius
     def GetCelcius(self):
+        """
+        @retval Current Temperature value as float in Degree Celcius
+        """
         ADCMax = (self.ADDevice.ADSamples * 1023) /(2**self.ADDevice.ADBitshift)
-        #if self.ADDevice.ADSamples == 1 and self.ADDevice.ADBitshift == 0:
-        #    ADCMax=1023
-        #else:
-        #    ADCMax = 65535
         sample=self.Get()
         R = self.RefVoltage / ADCMax
         Volt = sample*R-.5        
         return Volt/self.VoltPerDegree
 
-    # Return Current Temperature value as float in Degree Kelvin
     def GetKelvin(self):
+        """
+        @retval Current Temperature value as float in Degree Kelvin
+        """
         return self.GetCelcius() + 273.15
 
-    # Return Current Temperature value as float in Degree Fahrenheit
     def GetFahrenheit(self):
+        """
+        @retval Current Temperature value as float in Degree Fahrenheit
+        """
         return self.GetCelcius()*1.8+32
         
 
 class PWMOut(IOPin):
-    IO=1
-
-    # Set the value to be PWM encoded on the Pin
+    """
+    @brief class representing an IOPin used for PWM output
+    """
     def Set(self,value):
+        """
+        Set the PWM output value
+        @param value Byte: the value
+        """
         self.Bus.Write_uInt8(self.Address,0x50+self.Pin,value)        
 
 class IOPinBase():
-    IODevice=ATTiny
+    """
+    Class For BitWizard boards with Digital/Analog IO, On board Temperature sensors etc. Usu this as a baseclass for creating new board classes only.
+    It is part of the automatic reconfiguration code. Classed using this as a baseclass can override PinConfig, ADSamples and ADBitshift. and calls to SetPinConfig and InitAnalog might be usefull and can be done in realtime.
+    @brief class for BitWizzard boards with IOPins.
+    """
+    IODevice=_ATTiny
     PinConfig = {}
     IOPins = 0
     ADCChannels = 0
@@ -664,6 +735,12 @@ class IOPinBase():
         self.SetInputOutput(mask,pwmmask)
 
     def SetPinConfig(self,pin, pintype, **kwargs):
+        """
+        Set or change the functionality of one IOPin.
+        @param pin Int: The Pinnummer on the board to Set/Change
+        @param pintype class: Can be any subclass of IOPin, like DigitalIn, DogitalOut, PWMOut, AnalogIn, MCP9700 etc. 
+        @param **kwargs: additional configuration passed to the __init__ when in instance of pintype is created.
+        """
         if self.Pins[pin]!=None:
             del self.Pins[pin]
         if self.PinConfig.has_key(pin):
@@ -684,6 +761,12 @@ class IOPinBase():
         self.Bus.Write_uInt8(self.Address,0x5F,pwmmask)
         
     def InitAnalog(self,ADSamples=None,ADBitshift=None):
+        """
+        Use this method to change the number of samples and bitshift returned bu the Get function of an analogIn Pin or connected sensor
+        @param ADSamples Int: Set the number of samples to add, typically 256,1024,2048,4096 (Default)
+        @param ADBitshift Int:
+        @see Bitwizard.nl wiki for detailed information 
+        """
         if self.ADCChannels > 0:
             if ADSamples!=None:
                 self.ADSamples  = ADSamples
@@ -696,6 +779,10 @@ class IOPinBase():
             
 
 class DIO(BitWizardBase,IOPinBase):
+    """
+    @brief class representing the LCD_DIO board.
+    """
+    
     PinConfig={}
     IOPins = 7
     DefaultAddress = 0x84
@@ -704,8 +791,11 @@ class DIO(BitWizardBase,IOPinBase):
         BitWizardBase.__init__(self,bus,Address)
         IOPinBase.__init__(self)
 
-    # Set All outputs according to bitmap, pin 0 is LSB
     def SetAllOutputs(self,value=0x00):
+        """
+        Sets Set All outputs
+        @param value Byte: bitmap, pin 0 is LSB 
+        """
         self.Bus.Write_uInt8(self.Address,0x10,value)
         
 SPI.DeviceList["spi_dio"]= DIO      
@@ -715,6 +805,10 @@ I2C.DeviceList["i2c_dio"]= DIO
      
 
 class LCD_16x2(BitWizardLcd):
+    """
+    @brief class representing the LCD_16x2 board.
+    @todo solve Devicelist problem (Ident String)
+    """
     DefaultAddress = 0x82
     Width=16
     Height=2
@@ -723,12 +817,19 @@ I2C.DeviceList["i2c_lcd"]= LCD_16x2
 
 
 class LCD_20x4(BitWizardLcd):
+    """
+    @brief class representing the LCD_20x4 board.
+    @todo solve Devicelist problem (Ident String)
+    """
     DefaultAddress = 0x94
     Width=20
     Height=4
 
 
 class Servo(BitWizardBase):
+    """
+    @brief class representing the Servo board.
+    """
     DefaultAddress= 0x86
     Servos = 7
 
@@ -743,6 +844,11 @@ I2C.DeviceList["i2c_servo"]= Servo
 
 
 class PushButtons_4(BitWizardPushButtons):
+    """
+    @brief class representing the 4Pushbutton board.
+    @todo Set DefaultAddress to correct value
+    """
+
     #DefaultAddress = 0x00
     PushButtons=4
 
@@ -750,9 +856,12 @@ class Ui_PushButtons(BitWizardPushButtons):
     PushButtons=6
 
 class RPi_Ui_20x4(LCD_20x4,Ui_PushButtons,IOPinBase):
+    """
+    @brief class representing the RPi_Ui_20x4 board for Raspberry Pi
+    """
     IOPins=2
     DefaultAddress = 0x94
-    IODevice = ATMega
+    IODevice = _ATMega
     ADSamples = 4096
     ADBitshift = 6
     PinConfig={0:{"device":MCP9700,'property':'IntTemp'},1:{"device":AnalogIn,"vref":1,'property':'ExtAnalog'}}
@@ -764,11 +873,15 @@ class RPi_Ui_20x4(LCD_20x4,Ui_PushButtons,IOPinBase):
 SPI.DeviceList["spi_rpi_ui"]= RPi_Ui_20x4     
 
 
-class RPi_Ui_16x2(LCD_20x4,Ui_PushButtons, IOPinBase):
+class RPi_Ui_16x2(LCD_16x2,Ui_PushButtons, IOPinBase):
+    """
+    @brief class representing the RPi_Ui_16x2 board for Raspberry Pi.
+    """
+
     DefaultAddress = 0x94
     IOPins=2
     DefaultAddress = 0x94
-    IODevice = ATMega
+    IODevice = _ATMega
     ADSamples = 4096
     ADBitshift = 6
     PinConfig={0:{"device":MCP9700,'property':'IntTemp'},1:{"device":AnalogIn,"vref":1,'property':'ExtAnalog'}}
@@ -781,6 +894,10 @@ class RPi_Ui_16x2(LCD_20x4,Ui_PushButtons, IOPinBase):
 
 
 class LED7Segment(BitWizardBase):
+    """
+    @brief class representing the SPI_7Segment board.
+    """
+
     DefaultAddress = 0x96
 
     def SetBitmap4(self,D1=0,D2=0,D3=0,D4=0):
@@ -794,7 +911,6 @@ class LED7Segment(BitWizardBase):
         
     def SetHex1(self,char, value=0):
         self.Bus.Write_uInt8(self.Address,0x30+char,value)
-
 
     def BottomDot(self,on=True):
         if on:
@@ -828,6 +944,10 @@ SPI.DeviceList['spi_7segment']=LED7Segment
 
 
 class Relay(BitWizardBase,IOPinBase):
+    """
+    @brief class representing the 2Relay board.
+    """
+
     DefaultAddress = 0x8E
     IOPins = 2
     PinConfig = {0:{'device':DigitalOut},1:{'device':DigitalOut}}
@@ -841,6 +961,10 @@ I2C.DeviceList["i2c_relay"]= Relay
 
 
 class BigRelay(BitWizardBase,IOPinBase):
+    """
+    @brief class representing the BigRelay board.
+    """
+
     DefaultAddress = 0x9E
     IOPins = 6
     PinConfig = {}
@@ -861,6 +985,10 @@ I2C.DeviceList["i2c_bigrelay"]= BigRelay
 
 
 class Fet3(BitWizardBase,IOPinBase):
+    """
+    @brief class representing the 3FET board.
+    """
+
     DefaultAddress = 0x8A
     IOPins = 3
     PinConfig = {}
@@ -876,6 +1004,9 @@ SPI.DeviceList["spi_3fet"]= Fet3
 I2C.DeviceList["i2c_3fet"]= Fet3      
 
 class StepperMotor:
+    """
+    @brief class for using the steppermotor functions on 7FET and MOTOR boards.
+    """
 
     class StepperPin(IOPin):
         IO=1
@@ -944,6 +1075,9 @@ class StepperMotor:
 
 
 class Fet7(BitWizardBase,IOPinBase,StepperMotor):
+    """
+    @brief class representing the 7Fet board.
+    """
     DefaultAddress = 0x88
     IOPins = 7
     PinConfig={}
@@ -964,3 +1098,5 @@ SPI.DeviceList["spi_7fet"]= Fet7
 I2C.DeviceList["i2c_7fet"]= Fet7      
 
 
+if __name__ == "__main__":
+    pass
