@@ -528,10 +528,10 @@ class BitWizardPushButtons(BitWizardBase):
     """
     PushButtons = 0
     def ReadAll(self):
-    """
-    Read All buttons for them being pressed right now.
-    @retval an array of length self.PushButtons with boolean values, True when being pressed
-    """
+        """
+        Read All buttons for them being pressed right now.
+        @retval an array of length self.PushButtons with boolean values, True when being pressed
+        """
         v =self.Bus.Read_uInt8(self.Address,0x10)
         Buttons = []
         for i in range(0,self.PushButtons):
@@ -539,26 +539,26 @@ class BitWizardPushButtons(BitWizardBase):
         return Buttons
 
     def ReadOne(self,button):
-    """
-    Check One button to see if it is pressed or not.
-    @param button Int:= Buttonnumber >=0 < self.PushButtons
-    @retval True if the button is being Pressed
-    """
+        """
+        Check One button to see if it is pressed or not.
+        @param button Int:= Buttonnumber >=0 < self.PushButtons
+        @retval True if the button is being Pressed
+        """
         return bool(self.Bus.Read_uInt8(self.Address, 0x40+button))
 
     def ReadOneInv(self,button):
-    """
-    Read the Status of one butten, like ReadOne
-    @retval Boolean, is equal to: not self.ReadOne(button)
-    """
+        """
+        Read the Status of one butten, like ReadOne
+        @retval Boolean, is equal to: not self.ReadOne(button)
+        """
         return bool(self.Bus.Read_uInt8(self.Address, 0x20+button))
 
     def ReportPressed(self):
-    """
-    Report if any button has been pressed since this method was last called. Will reset the register
-    you can use this in a loop, be shure to flush the register beforehand by calling this once.
-    @retval an array of length self.PushButtons with boolean values, True if that button has been pressed
-    """
+        """
+        Report if any button has been pressed since this method was last called. Will reset the register
+        you can use this in a loop, be shure to flush the register beforehand by calling this once.
+        @retval an array of length self.PushButtons with boolean values, True if that button has been pressed
+        """
         v =self.Bus.Read_uInt8(self.Address,0x30)
         Buttons = []
         for i in range(0,self.PushButtons):
