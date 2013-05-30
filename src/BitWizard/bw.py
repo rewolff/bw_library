@@ -859,8 +859,6 @@ class LCD_16x2(BitWizardLcd):
     DefaultAddress = 0x82
     Width=16
     Height=2
-SPI.DeviceList["spi_lcd"]= LCD_16x2      
-I2C.DeviceList["i2c_lcd"]= LCD_16x2      
 
 
 class LCD_20x4(BitWizardLcd):
@@ -871,6 +869,8 @@ class LCD_20x4(BitWizardLcd):
     DefaultAddress = 0x94
     Width=20
     Height=4
+SPI.DeviceList["spi_lcd"]= LCD_20x4      
+I2C.DeviceList["i2c_lcd"]= LCD_20x4      
 
 
 class Servo(BitWizardBase):
@@ -918,7 +918,9 @@ class RPi_Ui_20x4(LCD_20x4,Ui_PushButtons,IOPinBase):
         IOPinBase.__init__(self)
     
 SPI.DeviceList["spi_rpi_ui"]= RPi_Ui_20x4     
+I2C.DeviceList["i2c_rpi_ui"]= RPi_Ui_20x4     
 
+    
 
 class RPi_Ui_16x2(LCD_16x2,Ui_PushButtons, IOPinBase):
     """
@@ -938,11 +940,35 @@ class RPi_Ui_16x2(LCD_16x2,Ui_PushButtons, IOPinBase):
         IOPinBase.__init__(self)
 
 #SPI.DeviceList["spi_rpi_ui"]= RPi_Ui_16x2     
+# Impossible to tell which LCD is connected during .
+
+def SetAutodetectLCD(lcd):
+    """
+    Since it is impossible to tell which LCD is connected it is impossible
+    for the I2C/SPI.scan() method to create the proper instance.
+    Pass the proper object reference (Not Instance), ie. LCD_16x2, LCD20x4 before scan is called.
+
+    The system default is 20x4, change to 16x2 with SetAutoDetectLCD(LCD_16x2)
+    """
+    SPI.DeviceList["spi_lcd"]= lcd     
+    I2C.DeviceList["i2c_lcd"]= lcd     
+    
+def SetAutoDetectUi(Ui):
+    """
+    Since it is impossible to tell which LCD is connected it is impossible
+    for the I2C/SPI.scan() method to create the proper instance.
+    Pass the proper object reference(Not instance of), ie. RPi_Ui_16x2, RPi_Ui_20x4 before scan is called.
+    
+    the system default is 20x4, change to 16x2 with SetAutoDetectUi(RPi_Ui_16x2) 
+    """
+    SPI.DeviceList["spi_rpi_ui"]= Ui     
+    I2C.DeviceList["i2c_rpi_ui"]= Ui     
 
 
 class LED7Segment(BitWizardBase):
     """
     @brief class representing the SPI_7Segment board.
+    @Todo: Investigate SetHex4 seems to influence the dots when d3=7 ??!?!?
     """
 
     DefaultAddress = 0x96
@@ -1054,7 +1080,12 @@ I2C.DeviceList["i2c_3fet"]= Fet3
 
 class StepperMotor:
     """
-    @brief class for using the steppermotor functions on 7FET and MOTOR boards.
+    
+    @brief: class for using the steppermotor functions on 7FET and MOTOR boards.
+    @todo: test well
+    @todo: document
+    @todo: test with MotorBoard
+    @todo: change Bus.Transaction
     """
 
     class StepperPin(IOPin):
