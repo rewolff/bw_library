@@ -1,6 +1,7 @@
 var classBitWizard_1_1bw_1_1DigitalOut =
 [
     [ "__init__", "classBitWizard_1_1bw_1_1DigitalOut.html#ac775ee34451fdfa742b318538164070e", null ],
+    [ "Get", "classBitWizard_1_1bw_1_1DigitalOut.html#ac44eccc1b744f90c7bad0fdf8f2d25a6", null ],
     [ "PinMask", "classBitWizard_1_1bw_1_1DigitalOut.html#a59b61091a1f111269f04a9182de1ea6e", null ],
     [ "Set", "classBitWizard_1_1bw_1_1DigitalOut.html#ad572bfb5882f34d434f6b8dcf6362cc3", null ],
     [ "Address", "classBitWizard_1_1bw_1_1DigitalOut.html#a0e3ff8b7e5ac0271d5a99eb98a079b46", null ],

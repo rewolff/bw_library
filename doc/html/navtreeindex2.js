@@ -1,5 +1,7 @@
 var NAVTREEINDEX2 =
 {
+"classBitWizard_1_1bw_1_1SPI.html#a74b73681af92aab2f4c56db3631ef59a":[2,0,0,0,6,10],
+"classBitWizard_1_1bw_1_1SPI.html#a7b3de4a95e6a0b9e3a0791ef13dbdafa":[2,0,0,0,6,17],
 "classBitWizard_1_1bw_1_1SPI.html#a830178da205bde50412f1b3f099fb7cf":[2,0,0,0,6,2],
 "classBitWizard_1_1bw_1_1SPI.html#a8e5b842171165ea1cf5175c2c8341add":[2,0,0,0,6,35],
 "classBitWizard_1_1bw_1_1SPI.html#a8e8a6aab4d125fafb7eecd6cab16d8cb":[2,0,0,0,6,27],
@@ -106,8 +108,8 @@ var NAVTREEINDEX2 =
 "dir_67c8736f06b7fa94610981580a9bf593.html":[3,0,0,0],
 "dir_68267d1309a1af8e8297ef4c3efbcdba.html":[3,0,0],
 "files.html":[3,0],
-"functions.html":[2,3,0],
 "functions.html":[2,3,0,0],
+"functions.html":[2,3,0],
 "functions_0x61.html":[2,3,0,1],
 "functions_0x62.html":[2,3,0,2],
 "functions_0x63.html":[2,3,0,3],

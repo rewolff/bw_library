@@ -26,8 +26,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"classBitWizard_1_1bw_1_1IOPinBase.html#a95f90e1f46f4d26ef09e27036c938179",
-"classBitWizard_1_1bw_1_1SPI.html#a830178da205bde50412f1b3f099fb7cf"
+"classBitWizard_1_1bw_1_1IOPinBase.html#a8aeaf0cd4898178c561573532ed82d17",
+"classBitWizard_1_1bw_1_1SPI.html#a74b73681af92aab2f4c56db3631ef59a"
 ];
 
 var navTreeSubIndices = new Array();
