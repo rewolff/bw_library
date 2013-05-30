@@ -569,9 +569,23 @@ class BitWizardPushButtons(BitWizardBase):
         """
         Report if any button has been pressed since this method was last called. Will reset the register
         you can use this in a loop, be shure to flush the register beforehand by calling this once.
+        If you keep a button pushed, it will read out as 1 multiple times.
         @retval an array of length self.PushButtons with boolean values, True if that button has been pressed
         """
         v =self.Bus.Read_uInt8(self.Address,0x30)
+        Buttons = []
+        for i in range(0,self.PushButtons):
+            Buttons.append(v & 2**i == 2**i)
+        return Buttons
+    
+    def ReportPressedOnce(self):
+        """
+        Report if any button has been pressed since this method was last called. Will reset the register
+        you can use this in a loop, be shure to flush the register beforehand by calling this once.
+        @retval an array of length self.PushButtons with boolean values, True if that button has been pressed
+        If you keep a button pushed, it will read out as 1 only once.
+        """
+        v =self.Bus.Read_uInt8(self.Address,0x31)
         Buttons = []
         for i in range(0,self.PushButtons):
             Buttons.append(v & 2**i == 2**i)
