@@ -105,7 +105,7 @@ class Menu():
         while line<self.Display.Height:
             self.Display.SetCursor(0,line)
             if self.CursorPosition+line < len(self.Items):
-                self.Display.Print(self.Items[self.CursorPosition+line].Show()+(" " * (self.Display.Width-len(self.Items[self.CursorPosition+line].Show())))[0:Self.Display.Width])
+                self.Display.Print(self.Items[self.CursorPosition+line].Show()+(" " * (self.Display.Width-len(self.Items[self.CursorPosition+line].Show())))[0:self.Display.Width])
             else:
                 self.Display.Print(" "*self.Display.Width)
             line+=1
