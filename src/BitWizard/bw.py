@@ -1,4 +1,4 @@
-
+#force update
 
 """
 High level interface for communicating with SPI and I2C devices.
@@ -134,7 +134,7 @@ class _Bus(object):
 
     def Write_Int8(self,Address,Register,Int8):
         """
-        @brief Writea signed Int8
+        @brief Write a signed Int8
         @param Address Byte: The address of the device
         @param Register Byte: the register to read from
         @param Int8 Byte: Data to write
@@ -142,6 +142,11 @@ class _Bus(object):
         self.Transaction(chr(Address)+chr(Register)+struct.pack('b',Int8))
 
     def Read_uInt8(self,Address,Register):
+        """
+        @Brief Read a single uInt8 (byte)
+        @param Address Byte: The address of the device
+        @param Register Byte: The register to read from
+        """
         return struct.unpack('B',self.Transaction(chr(Address+1)+chr(Register),3)[1][2])[0]
 
     def Write_uInt8(self,Address,Register,uInt8):
@@ -450,27 +455,31 @@ class BitWizardLcd(BitWizardBase):
     # x = position >= 0
     # y = line >=0
     def SetCursor(self,x,y):
+        """Set Cursor position"""
         self.Bus.Write_uInt8(self.Address,0x11,32*y+x)
 
-    # Clear Screen and set Cursor to (0,0)
     def Cls(self):
+        """Clear screen of LCD and reset the cursor to 0,0"""
         self.Bus.Write_uInt8(self.Address,0x10,0x00)
 
-    # Print text on current cursor position
     def Print(self,text = ""):
+        """Print text on the current cursor position"""
         self.Bus.Write_String(self.Address,0x00, text)
 
     # Print text on given position, see SetCursor
     def PrintAt(self,x=0,y=0,text=''):
+        """Print text on the given x/y position"""
         self.SetCursor(x,y)
         self.Print(text)
 
     # Set the Contrast of the LCD
     def Contrast(self, value=128):
+        """Change LCD contrast, defaults to 128"""
         self.Bus.Write_uInt8(self.Address,Contrast,value)
 
     # Set the BackLight of the LCD
     def Backlight(self, value = 128):
+        """Change the intensity of the backlight, Defaults to 128"""
         self.Bus.Write_uInt8(self.Address,Backlight,value)
 
     # Initialize the LCD Controller
@@ -483,6 +492,7 @@ class BitWizardLcd(BitWizardBase):
 
     # Set Cursor Visible and make it blink or not
     def Cursor(self,on=True,blink=False):
+        """Show the cursor and/or set it to blink"""
         value = 8+4
         if on and blink:
             value+=1
@@ -491,15 +501,15 @@ class BitWizardLcd(BitWizardBase):
         self.Bus.Write_uInt8(self.Address,0x01,value)
 
     # Set Cursor to the home position (0,0)
+    
     def CursorHome(self):
+        """Move the cursor to 0,0 or HOME position"""
         self.Bus.Write_uInt8(self.Address, 0x01, 0x02)
             
-    # Define the:
-    # char = character number 0 >= see LCD datasheet
-    # data = char Bitmap see LCD Datasheet
-    # TODO: This does NOT work and is for BitWizard.ui.ProgressBar
-    # TODO: Change to make it functional
     def DefineChar(self,char, Data=[0,0,0,0,0,0,0,0]):
+        """Define a charachter
+        @todo: This does NOT work (yet) and is for BitWizard.ui.ProgressBar
+        @todo: Change to make it functional"""
         self.Bus.Transaction(chr(self.Address)+chr(0x01)+chr(0x40))
         self.Bus.Transaction(chr(self.Address)+chr(0x00)+chr(0x00)+chr(0x00)+chr(0x00)+chr(0x00)+chr(0x00)+chr(0x00)+chr(0x00)+chr(0x00))
         self.Bus.Transaction(chr(self.Address)+chr(0x01)+chr(0x48))
@@ -513,8 +523,10 @@ class BitWizardLcd(BitWizardBase):
         self.Bus.Transaction(chr(self.Address)+chr(0x01)+chr(0x68))
         self.Bus.Transaction(chr(self.Address)+chr(0x00)+chr(0x1F)+chr(0x1F)+chr(0x1F)+chr(0x1F)+chr(0x1F)+chr(0x1F)+chr(0x1F)+chr(0x1F))
         
-    # TODO: Investigate odd behaviour of LCD                                
     def DisplayMode(self, cursormove=True,displayshift=False):
+        """Change the Display mode of the LCD
+        @todo: Does not work, Investigate odd behaviour of LCD                                
+        """
         value=16
         if cursormove:
             value+=4
@@ -568,7 +580,8 @@ class BitWizardPushButtons(BitWizardBase):
 
 class IOPin():
     """
-    Base class for implementing basic interfaces to IOPins on BitWizard Boards
+    Base class for implementing basic interfaces to IOPins on BitWizard Boards.
+    Use of this object is Internal to this library.
     """
     IO=0
     def __init__(self,Pin, parent):
@@ -594,7 +607,7 @@ class DigitalIn(IOPin):
     def Get(self):
         """
         Get the current state of this pin.
-        (Broken)
+        @todo: implement (now just returns False)
         @retval Boolean, True for Input High, False for Input Low
         """
         value=False
@@ -617,7 +630,17 @@ class DigitalOut(IOPin):
             onoff = 0x01
         else:
             onoff = 0x00
-        self.Bus.Write_uInt8(self.Address,0x20+self.pin, onoff)
+        self.Bus.Write_uInt8(self.Address,0x20+self.Pin, onoff)
+
+    def Get(self):
+        """
+        Get the current state of this pin.
+        @todo: implement (now just returns False)
+        @retval Boolean, True for Input High, False for Input Low
+        """
+        value=False
+        return value
+
 
 class AnalogIn(IOPin):
     """
@@ -701,9 +724,19 @@ class PWMOut(IOPin):
         """
         self.Bus.Write_uInt8(self.Address,0x50+self.Pin,value)        
 
+    def Get(self):
+        """
+        Get the current value of this pin.
+        @todo: implement (now just retruns 0)
+        @retval Int 0-255
+        """
+        value=0
+        return value
+
+
 class IOPinBase():
     """
-    Class For BitWizard boards with Digital/Analog IO, On board Temperature sensors etc. Usu this as a baseclass for creating new board classes only.
+    Class For BitWizard boards with Digital/Analog IO, On board Temperature sensors etc. Use this as a baseclass for creating new board classes only.
     It is part of the automatic reconfiguration code. Classed using this as a baseclass can override PinConfig, ADSamples and ADBitshift. and calls to SetPinConfig and InitAnalog might be usefull and can be done in realtime.
     @brief class for BitWizzard boards with IOPins.
     """
@@ -754,7 +787,7 @@ class IOPinBase():
         self.Pins[pin]=pintype(pin,self)
         self.DoPinConfig()
         if c!= self.ADCChannels:
-            self.Bus.Write_uInt8(self.Address,0x80,self.ADCChannel)
+            self.Bus.Write_uInt8(self.Address,0x80,self.ADCChannels)
 
     def SetInputOutput(self, mask=0x00,pwmmask=0x00):
         self.Bus.Write_uInt8(self.Address,0x30,mask)
@@ -904,7 +937,7 @@ class LED7Segment(BitWizardBase):
         self.Bus.Write_uInt8s(self.Address,0x10,D1,D2,D3,D4)
 
     def SetBitmap1(self,char, value=0):
-        self.Bus.Write_uInt8(self.Address,0x19+char,value)
+        self.Bus.Write_uInt8(self.Address,0x20+char,value)
 
     def SetHex4(self,D1=0,D2=0,D3=0,D4=0):
         self.Bus.Write_uInt8s(self.Address,0x11,D1,D2,D3,D4)
@@ -933,11 +966,13 @@ class LED7Segment(BitWizardBase):
             value=0x00
         self.Bus.Write_uInt8(self.Address,0x42,value)
 
-    #TODO : Fix
+
     def GetBitmap4(self,D1=0,D2=0,D3=0,D4=0):
+        """@todo: does not work"""
         return self.Bus.Transaction(chr(self.Address)+chr(0x10)+chr(D1))
-    #TODO : Fix
+
     def GetBitmap1(self,chart):
+        """@todo: does not work"""
         return self.Bus.Transaction(chr(self.Address)+chr(0x19+char))
 SPI.DeviceList['spi_7segment']=LED7Segment
 
