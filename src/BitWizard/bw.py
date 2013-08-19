@@ -315,7 +315,7 @@ class SPI(_Bus,NET):
             if self.InUseBy!=None:
                 self.Ident=VersionStrip
     
-    def __init__(self, device = '/dev/spidev0.0', delay = 40, speed = 450000, bits = 8,Port=None,Server=None):
+    def __init__(self, device = '/dev/spidev0.0', delay = 40, speed = 200000, bits = 8,Port=None,Server=None):
         """
             device = any SPI-Bus device in /dev, default /dev/spidev0.0
             delay  = SPI Bus delay between transactions in ms, default 0
@@ -632,9 +632,8 @@ class DigitalIn(IOPin):
         @todo: implement (now just returns False)
         @retval Boolean, True for Input High, False for Input Low
         """
-        value=False
-        return value
-    
+        return bool(self.Bus.Read_uInt8(self.Address, 0x40+self.Pin))        
+        
 class DigitalOut(IOPin):
     """
     @brief Base class for communicating Digital Output Pins 
@@ -1105,8 +1104,10 @@ class StepperMotor:
         for p in range(4):
             self.SetPinConfig(p,StepperMotor.StepperPin)
         self.SetStepDelay(StepDelay)
-        #if CurrentPosition!=None:
-        #    self.SetCurrentPosition(CurrentPosition)
+        print self.GetCurrentPosition()
+        if CurrentPosition!=None:
+            print 'HUH?'
+            self.SetCurrentPosition(CurrentPosition)
             
     def DegreeToSteps(self,Degree):
         return int(round(Degree*(self.Reduction/self.StepAngle/2)))
@@ -1189,4 +1190,12 @@ I2C.DeviceList["i2c_7fet"]= Fet7
 
 
 if __name__ == "__main__":
-    pass    
+    S=SPI()
+    s=Fet7(S)
+    s.StepperInit(5.625,64)
+    print s.GetCurrentPosition()
+
+    s.SetCurrentPosition(0)
+ #   s.SetCurrentPosition(360)
+    print s.GetCurrentPosition()
+    
