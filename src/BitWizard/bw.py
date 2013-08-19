@@ -76,7 +76,7 @@ class NETPnp(object):
 class NET(object):
     """
     This class is used as a base clase for both I2C and SPI busses. It makes it possible to run an BitWizardLib based application on a computer with no I2C or SPI bus directly connected to it.
-    If you want to use this functionality, see the I@C or SPI bus Documentation.
+    If you want to use this functionality, see the I2C or SPI bus Documentation.
     @brief Baseclass for extending I2C and SPI busses over TCP/IP.
     """
     Port = 50000
@@ -152,9 +152,17 @@ class _Bus(object):
     def Write_uInt8(self,Address,Register,uInt8):
         self.Transaction(chr(Address)+chr(Register)+struct.pack('B',uInt8))
 
-    def Read_uInt8s(self,Address,Register,Number):
+    def Read_uInt8s(self,Address,Register,Number=0):
+        """
+        @Brief Read an List of uInt8 (byte)
+        @param Address Byte: The address of the device
+        @param Register Byte: The register to read from
+        @param Number Byte: The amount of byes to read, if 0 or not set, an unexpected length is received
+        @todo: Not implemented yet
+        """
         pass
 
+    
     def Write_uInt8s(self,Address,Register,*Bytes):
         self.Transaction(chr(Address)+chr(Register)+''.join([chr(b) for b in Bytes])) 
 
@@ -854,7 +862,6 @@ I2C.DeviceList["i2c_dio"]= DIO
 class LCD_16x2(BitWizardLcd):
     """
     @brief class representing the LCD_16x2 board.
-    @todo solve Devicelist problem (Ident String)
     """
     DefaultAddress = 0x82
     Width=16
@@ -864,7 +871,6 @@ class LCD_16x2(BitWizardLcd):
 class LCD_20x4(BitWizardLcd):
     """
     @brief class representing the LCD_20x4 board.
-    @todo solve Devicelist problem (Ident String)
     """
     DefaultAddress = 0x94
     Width=20
@@ -1099,8 +1105,8 @@ class StepperMotor:
         for p in range(4):
             self.SetPinConfig(p,StepperMotor.StepperPin)
         self.SetStepDelay(StepDelay)
-        if CurrentPosition!=None:
-            self.SetCurrentPosition(CurrentPosition)
+        #if CurrentPosition!=None:
+        #    self.SetCurrentPosition(CurrentPosition)
             
     def DegreeToSteps(self,Degree):
         return int(round(Degree*(self.Reduction/self.StepAngle/2)))
@@ -1148,6 +1154,10 @@ class StepperMotor:
         self.SetRelativePosition(self.DegreeToSteps(Degree))
 
     def SetStepDelay(self,delay=200):
+        """
+        @brief Set the delay between steps in milliseconds.
+        @param delay : Default 200 (5 steps per second).
+        """        
         self.Bus.Transaction(chr(self.Address)+chr(0x43)+chr(delay))
 
     def GetStepDelay(self):
@@ -1179,4 +1189,4 @@ I2C.DeviceList["i2c_7fet"]= Fet7
 
 
 if __name__ == "__main__":
-    pass
+    pass    
