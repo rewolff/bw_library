@@ -4,5 +4,7 @@ var searchData=
   ['delay',['Delay',['../classBitWizard_1_1bw_1_1SPI.html#add82f153bbd0cb0c0b0d542c650ae60a',1,'BitWizard::bw::SPI']]],
   ['device',['Device',['../classBitWizard_1_1bw_1_1SPI.html#adb53a8cc97236ca207c035241a5b7fb8',1,'BitWizard::bw::SPI']]],
   ['devicelist',['DeviceList',['../classBitWizard_1_1bw_1_1I2C.html#abb5ab20dfbcacb829f89e60b03589acc',1,'BitWizard.bw.I2C.DeviceList()'],['../classBitWizard_1_1bw_1_1SPI.html#abb5ab20dfbcacb829f89e60b03589acc',1,'BitWizard.bw.SPI.DeviceList()']]],
-  ['devices',['Devices',['../classBitWizard_1_1bw_1_1I2C.html#a0f437e2f17733d576d5646e7abe1fed3',1,'BitWizard.bw.I2C.Devices()'],['../classBitWizard_1_1bw_1_1SPI.html#a0f437e2f17733d576d5646e7abe1fed3',1,'BitWizard.bw.SPI.Devices()']]]
+  ['devices',['Devices',['../classBitWizard_1_1bw_1_1I2C.html#a0f437e2f17733d576d5646e7abe1fed3',1,'BitWizard.bw.I2C.Devices()'],['../classBitWizard_1_1bw_1_1SPI.html#a0f437e2f17733d576d5646e7abe1fed3',1,'BitWizard.bw.SPI.Devices()']]],
+  ['display',['Display',['../classBitWizard_1_1ui_1_1Menu.html#a0d0f740ae3a262d3a0514dd828282050',1,'BitWizard::ui::Menu']]],
+  ['displayinit',['DisplayInit',['../classBitWizard_1_1ui_1_1MenuItem.html#addf2c02e6dd4ee6e54e97b5b4960262c',1,'BitWizard::ui::MenuItem']]]
 ];

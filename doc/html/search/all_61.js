@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['action',['Action',['../classBitWizard_1_1ui_1_1MenuItem.html#a8bb1ef53467e4f61410d12822d922498',1,'BitWizard::ui::MenuItem']]],
   ['adbitshift',['ADBitshift',['../classBitWizard_1_1bw_1_1IOPinBase.html#a42402da11baad69babf49376d215d342',1,'BitWizard.bw.IOPinBase.ADBitshift()'],['../classBitWizard_1_1bw_1_1IOPinBase.html#a5dc076194438b6b7566c02d087ee27e9',1,'BitWizard.bw.IOPinBase.ADBitshift()'],['../classBitWizard_1_1bw_1_1RPi__Ui__20x4.html#a42402da11baad69babf49376d215d342',1,'BitWizard.bw.RPi_Ui_20x4.ADBitshift()'],['../classBitWizard_1_1bw_1_1RPi__Ui__16x2.html#a42402da11baad69babf49376d215d342',1,'BitWizard.bw.RPi_Ui_16x2.ADBitshift()']]],
   ['adcchannelconfig',['ADCChannelConfig',['../classBitWizard_1_1bw_1_1__ATTiny.html#a74528c7e6a69862baf7c98bde50443f1',1,'BitWizard.bw._ATTiny.ADCChannelConfig()'],['../classBitWizard_1_1bw_1_1__ATMega.html#a74528c7e6a69862baf7c98bde50443f1',1,'BitWizard.bw._ATMega.ADCChannelConfig()'],['../classBitWizard_1_1bw_1_1IOPinBase.html#a74528c7e6a69862baf7c98bde50443f1',1,'BitWizard.bw.IOPinBase.ADCChannelConfig()']]],
   ['adcchannels',['ADCChannels',['../classBitWizard_1_1bw_1_1IOPinBase.html#a95f90e1f46f4d26ef09e27036c938179',1,'BitWizard::bw::IOPinBase']]],

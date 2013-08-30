@@ -45,6 +45,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="examples.html"><span>Examples</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -135,9 +136,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a3e7efda7b1f48e6faced00e32f8b79e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the Status of one butten, like ReadOne.  <a href="#a3e7efda7b1f48e6faced00e32f8b79e4"></a><br/></td></tr>
 <tr class="memitem:a99c1192edd15deec8531a510d95ed6c6"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBitWizard_1_1bw_1_1BitWizardPushButtons.html#a99c1192edd15deec8531a510d95ed6c6">ReportPressed</a></td></tr>
 <tr class="memdesc:a99c1192edd15deec8531a510d95ed6c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Report if any button has been pressed since this method was last called.  <a href="#a99c1192edd15deec8531a510d95ed6c6"></a><br/></td></tr>
+<tr class="memitem:ace44dabf590f1dc81b3b154fda6e179d"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBitWizard_1_1bw_1_1BitWizardPushButtons.html#ace44dabf590f1dc81b3b154fda6e179d">ReportPressedOnce</a></td></tr>
+<tr class="memdesc:ace44dabf590f1dc81b3b154fda6e179d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Report if any button has been pressed since this method was last called.  <a href="#ace44dabf590f1dc81b3b154fda6e179d"></a><br/></td></tr>
 <tr class="memitem:a1d888236c7d9b370858b6d582d0d5387"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBitWizard_1_1bw_1_1BitWizardBase.html#a1d888236c7d9b370858b6d582d0d5387">Ident</a></td></tr>
+<tr class="memdesc:a1d888236c7d9b370858b6d582d0d5387"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the Identification string of this board  <a href="#a1d888236c7d9b370858b6d582d0d5387"></a><br/></td></tr>
 <tr class="memitem:a87e1f85301a85cf1c1eec5ec8ef326b0"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBitWizard_1_1bw_1_1BitWizardBase.html#a87e1f85301a85cf1c1eec5ec8ef326b0">Serial</a></td></tr>
+<tr class="memdesc:a87e1f85301a85cf1c1eec5ec8ef326b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the Serial Number of this board  <a href="#a87e1f85301a85cf1c1eec5ec8ef326b0"></a><br/></td></tr>
 <tr class="memitem:aa1d1dedc19c0ffdc67fae3687dfac4fb"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBitWizard_1_1bw_1_1BitWizardBase.html#aa1d1dedc19c0ffdc67fae3687dfac4fb">ChangeAddress</a></td></tr>
+<tr class="memdesc:aa1d1dedc19c0ffdc67fae3687dfac4fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">change the address of the board, It will update all internal addressing so the object will continue to work after changing.  <a href="#aa1d1dedc19c0ffdc67fae3687dfac4fb"></a><br/></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -181,6 +187,12 @@ Static Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">newaddress</td><td>when set it will change to that address, if not It will retrun the board to it's default address. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -205,6 +217,12 @@ Static Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">Ident</td><td>String </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -345,10 +363,41 @@ Static Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Will reset the register you can use this in a loop, be shure to flush the register beforehand by calling this once. </p>
+<p>Will reset the register you can use this in a loop, be shure to flush the register beforehand by calling this once. If you keep a button pushed, it will read out ans True multiple times. </p>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
     <tr><td class="paramname">an</td><td>array of length self.PushButtons with boolean values, True if that button has been pressed </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ace44dabf590f1dc81b3b154fda6e179d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def ReportPressedOnce </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Will reset the register you can use this in a loop, be shure to flush the register beforehand by calling this once. </p>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">an</td><td>array of length self.PushButtons with boolean values, True if that button has been pressed If you keep a button pushed, it will read out as 1 only once. </td></tr>
   </table>
   </dd>
 </dl>
@@ -376,6 +425,12 @@ Static Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">Serial</td><td>Long </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -466,7 +521,7 @@ Static Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceBitWizard.html">BitWizard</a></li><li class="navelem"><a class="el" href="namespaceBitWizard_1_1bw.html">bw</a></li><li class="navelem"><a class="el" href="classBitWizard_1_1bw_1_1Ui__PushButtons.html">Ui_PushButtons</a></li>
-    <li class="footer">Generated on Thu May 30 2013 16:21:03 for BitWizardLib by
+    <li class="footer">Generated on Fri Aug 30 2013 17:35:34 for BitWizardLib by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.1.2 </li>
   </ul>

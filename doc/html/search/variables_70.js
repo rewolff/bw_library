@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['pidfile',['pidfile',['../classBitWizard_1_1daemon_1_1Daemon.html#afbdabbfbc455d8ccae416bdda8e69d11',1,'BitWizard::daemon::Daemon']]],
   ['pin',['Pin',['../classBitWizard_1_1bw_1_1IOPin.html#a0ae899668c707dacc092ff40985035f5',1,'BitWizard::bw::IOPin']]],
   ['pinconfig',['PinConfig',['../classBitWizard_1_1bw_1_1IOPinBase.html#a22a3133bf9163d4872198e9ba9a44c2e',1,'BitWizard.bw.IOPinBase.PinConfig()'],['../classBitWizard_1_1bw_1_1DIO.html#a22a3133bf9163d4872198e9ba9a44c2e',1,'BitWizard.bw.DIO.PinConfig()'],['../classBitWizard_1_1bw_1_1RPi__Ui__20x4.html#a22a3133bf9163d4872198e9ba9a44c2e',1,'BitWizard.bw.RPi_Ui_20x4.PinConfig()'],['../classBitWizard_1_1bw_1_1RPi__Ui__16x2.html#a22a3133bf9163d4872198e9ba9a44c2e',1,'BitWizard.bw.RPi_Ui_16x2.PinConfig()'],['../classBitWizard_1_1bw_1_1Relay.html#a22a3133bf9163d4872198e9ba9a44c2e',1,'BitWizard.bw.Relay.PinConfig()'],['../classBitWizard_1_1bw_1_1BigRelay.html#a22a3133bf9163d4872198e9ba9a44c2e',1,'BitWizard.bw.BigRelay.PinConfig()'],['../classBitWizard_1_1bw_1_1Fet3.html#a22a3133bf9163d4872198e9ba9a44c2e',1,'BitWizard.bw.Fet3.PinConfig()'],['../classBitWizard_1_1bw_1_1Fet7.html#a22a3133bf9163d4872198e9ba9a44c2e',1,'BitWizard.bw.Fet7.PinConfig()']]],
   ['pins',['Pins',['../classBitWizard_1_1bw_1_1IOPinBase.html#a8aeaf0cd4898178c561573532ed82d17',1,'BitWizard::bw::IOPinBase']]],

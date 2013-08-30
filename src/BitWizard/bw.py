@@ -1,8 +1,19 @@
-#force update
 
 """
-High level interface for communicating with SPI and I2C devices.
-Besides devices developed by BitWizard B.V. this library supports other devices and can be easily extended to communicate with other devices and/or devices connected to the BitWizard boards.
+@mainpage BitWizardLib introduction
+@section Introduction
+BitWizardLib is an Objective python library which interconnects python to I2C and/or SPI devices
+produced by Bitwizard.
+
+It can also be used to control devices on the busses over TCP/IP. By that you are able to run and or develop programs on computers not equipped with I2C/SPI busses.
+@section Installation
+After you have unpacked the dristribution .zip or .tgz the library is easily installed with: python setup.py install
+@section Getting started
+After installation you are ready to get going, see the example section of this documentation.
+
+@example clock.py
+@example menu.py
+@example daemon.py
 """
 
 from spi_ctypes import *
@@ -123,71 +134,139 @@ class NET(object):
 
 class _Bus(object):
     
-
     def Read_Int8(self,Address,Register):
         """
         @brief Read a signed Int8 
-        @param Address Byte: The address of the device
-        @param Register Byte: the register to read from
+        @param Address The address of the device
+        @param Register the register to read from
+        @retval Read_Int8 signed 8 bit integer
         """
         return struct.unpack('b',self.Transaction(chr(Address+1)+chr(Register),3)[1][2])[0]
 
     def Write_Int8(self,Address,Register,Int8):
         """
         @brief Write a signed Int8
-        @param Address Byte: The address of the device
-        @param Register Byte: the register to read from
-        @param Int8 Byte: Data to write
+        @param Address The address of the device
+        @param Register The register to write to
+        @param Int8 Data to write
         """
         self.Transaction(chr(Address)+chr(Register)+struct.pack('b',Int8))
 
     def Read_uInt8(self,Address,Register):
         """
-        @Brief Read a single uInt8 (byte)
+        @brief Read a single uInt8 (byte)
         @param Address Byte: The address of the device
         @param Register Byte: The register to read from
+        @retval Read_uInt8 Unsigned 8 bit integer
         """
         return struct.unpack('B',self.Transaction(chr(Address+1)+chr(Register),3)[1][2])[0]
 
     def Write_uInt8(self,Address,Register,uInt8):
+        """
+        @brief Write a unsigned Int8
+        @param Address The address of the device
+        @param Register The register to write to
+        @param Int8 Data to write
+        """
         self.Transaction(chr(Address)+chr(Register)+struct.pack('B',uInt8))
 
     def Read_uInt8s(self,Address,Register,Number=0):
         """
-        @Brief Read an List of uInt8 (byte)
-        @param Address Byte: The address of the device
-        @param Register Byte: The register to read from
-        @param Number Byte: The amount of byes to read, if 0 or not set, an unexpected length is received
+        @brief Read an List of uInt8 (byte)
+        @param Address The address of the device
+        @param Register The register to read from
+        @param Number The amount of byes to read, if 0 or not set, an unexpected length is received
+        @retval Read_uInt8s list of Unsigned 8 bit integers
+        @todo: Not implemented yet
+        """
+        pass
+    
+
+    
+    def Write_uInt8s(self,Address,Register,*Bytes):
+        """
+        @brief Write an List of uInt8 (byte)
+        @param Address The address of the device
+        @param Register The register to write to
+        @param Bytes any number of uInt8 parameters to send
+        """
+
+        self.Transaction(chr(Address)+chr(Register)+''.join([chr(b) for b in Bytes])) 
+
+    def Read_uInt16(self,Address,Register):
+        """
+        @brief Read a unsigned Int16 
+        @param Address The address of the device
+        @param Register the register to read from
+        @retval Read_uInt16 Unsigned 16 bit integer
+        """
+        return struct.unpack('H',self.Transaction(chr(Address+1)+chr(Register),6)[1][2:4])[0]
+
+    def Write_uInt16(self,Address,Register,uInt16):
+        """
+        @brief Write a unsigned Int16
+        @param Address The address of the device
+        @param Register The register to write to
+        @param uInt16 Data to write
+        """
+        self.Transaction(chr(Address)+chr(Register)+struct.pack('H',uInt16))
+
+    def Read_uInt16s(self,Address,Register,Number):
+        """
+        @brief Read an List of uInt16 (byte)
+        @param Address The address of the device
+        @param Register The register to read from
+        @param Number The amount of uInt to read, if 0 or not set, an unexpected length is received
+        @retval Read_uInt16s list of Unsigned 8 bit integers
         @todo: Not implemented yet
         """
         pass
 
-    
-    def Write_uInt8s(self,Address,Register,*Bytes):
-        self.Transaction(chr(Address)+chr(Register)+''.join([chr(b) for b in Bytes])) 
+    def Write_uInt16s(self,Address,Register,*Word):
+        """
+        @brief Write an List of uInt16
+        @param Address The address of the device
+        @param Register The register to write to
+        @param Bytes any number of uInt16 parameters to send
+        @todo: Not implemented yet
+        """
 
-    def Read_uInt16(self,Address,Register):
-        return struct.unpack('H',self.Transaction(chr(Address+1)+chr(Register),6)[1][2:4])[0]
-
-    def Write_uInt16(self,Address,Register,uInt16):
-        self.Transaction(chr(Address)+chr(Register)+struct.pack('H',uInt16))
-
-    def Read16s(self,Address,Register,Number):
-        pass
-
-    def Write16s(self,Address,Register,*Word):
         pass
                              
     def Read_Int32(self,Address,Register):
+        """
+        @brief Read a signed Int32 
+        @param Address The address of the device
+        @param Register the register to read from
+        @retval Read_Int32 signed 32 bit integer
+        """
         return struct.unpack('i',self.Transaction(chr(Address+1)+chr(Register),6)[1][2:6])[0]
 
     def Write_Int32(self,Address,Register,Int32):
+        """
+        @brief Write a signed Int32
+        @param Address The address of the device
+        @param Register The register to write to
+        @param Int32 Data to write
+        """
         self.Transaction(chr(Address)+chr(Register)+struct.pack('i',Int32))
 
     def Read_uInt32(self,Address,Register):
+        """
+        @brief Read a unsigned Int32 
+        @param Address The address of the device
+        @param Register the register to read from
+        @retval Read_uInt32 Unsigned 32 bit integer
+        """
         return struct.unpack('I',self.Transaction(chr(Address+1)+chr(Register),6)[1][2:6])[0]
 
     def Write_uInt32(self,Address,Register,uInt32):
+        """
+        @brief Write a unsigned Int32
+        @param Address The address of the device
+        @param Register The register to write to
+        @param uInt32 Data to write
+        """
         self.Transaction(chr(Address)+chr(Register)+struct.pack('I',uIt32))
 
     def Read32s(self,Address,Register,Number):
@@ -197,10 +276,24 @@ class _Bus(object):
         pass
 
     def Read_String(self,Address,Register,MaxLen=0x20):
+        """
+        @brief Read a string
+        @param Address The address of the device
+        @param Register The register to read from
+        @param MaxLen Maximum length of string to receive (it handles '0' terminated strings)
+        @retval Read_String String
+        """
         ret,rxbuf = self.Transaction(chr(Address+1)+chr(Register),MaxLen)
         return string_at(addressof(rxbuf)+2)    
 
     def Write_String(self,Address,Register,String,MaxLen=0x20):
+        """
+        @brief Write a string
+        @param Address The address of the device
+        @param Register The register to write to
+        @param String The String to write
+        @param MaxLen Maximum length of string to send
+        """
         if len(String)>MaxLen:
            String=String[0:20]                  
         self.Transaction(chr(Address)+chr(Register)+String)
@@ -233,6 +326,12 @@ class I2C(_Bus,NET):
         @param Port Default=None if set to an Integer this will be the TCP/IP port to listen on.
         @param Server Default=None if set to a string e.g. '192.168.200.137' the bus listening on that address/port combination will be connected to.
         @todo Ckeck for Raspberry Pi, and its version in /Proc/CPUInfo
+
+        If you Init an I2CBus like s = I2C(1,Port=50000) it wil listen to connections from a remote bw_library
+        on any other computer a bw_library installation can make use of tcp communications like the I2C bus is connected to the local machine.
+
+        Netbus = SPI(Server= '192.168.200.1',port=50000)
+        In this case the device parameter is ignored.
         """
         self.Port = Port
         self.Server=Server
@@ -317,10 +416,18 @@ class SPI(_Bus,NET):
     
     def __init__(self, device = '/dev/spidev0.0', delay = 40, speed = 200000, bits = 8,Port=None,Server=None):
         """
-            device = any SPI-Bus device in /dev, default /dev/spidev0.0
-            delay  = SPI Bus delay between transactions in ms, default 0
-            speed  = set the Bus Speed (Obsolete)
-            bits   = Number of bits in a data word, default = 8
+        @param device Any SPI-Bus device in /dev, default /dev/spidev0.0
+        @param delay SPI Bus delay between transactions in ms, default 0
+        @param speed Set the Bus Speed (Obsolete)
+        @param bits Number of bits in a data word, default = 8
+        @param Port Default=None if set to an Integer this will be the TCP/IP port to listen on.
+        @param Server Default=None if set to a string e.g. '192.168.200.137' the bus listening on that address/port combination will be connected to.
+
+        If you Init an SPIBus like s = SPI(Port=50000) it wil listen to connections from a remote bw_library
+        on any other computer a bw_library installation can make use of tcp communications like the SPI bus is connected to the local machine.
+
+        Netbus = SPI(Server= '192.168.200.1',port=50000)
+        In this case the device parameter is ignored.
         """
         self.Port = Port
         self.Server=Server
@@ -339,13 +446,18 @@ class SPI(_Bus,NET):
             self.SetSpeed()
         
     def Close(self):
-        """ Close the filehandle to this bus """ 
+        """
+        Close the filehandle to this bus
+        """ 
         posix.close(self.File)
 
     def Transaction(self,OutBuffer, read = 0):
-        """Do a SPI Transaction
-        OutBuffer = mandatory String, containing chr(Address)+chr(Command)+chr(databyte 1)+....
-        read      = Number of bytes to read from the SPI device
+        """
+        Do a SPI Transaction
+        @param OutBuffer mandatory String, containing chr(Address)+chr(Command)+chr(databyte 1)+....
+        @param read Number of bytes to read from the SPI device
+
+        There would be no need to call this method as normally Read/Write methods would be called.
         """
         ReceiveBuffer = create_string_buffer(chr(0) * 0x80)
         TransmitBuffer= create_string_buffer(OutBuffer)
@@ -368,6 +480,7 @@ class SPI(_Bus,NET):
         Transaction.bits_per_word = self.Bits
         Transaction.cs_change = 0
         Transaction.pad = 0
+        print type(addressof(Transaction))
         ret = ioctl(self.File,SPI_IOC_MESSAGE(1), addressof(Transaction))
         return ret, ReceiveBuffer
 
@@ -433,17 +546,29 @@ class BitWizardBase(object):
 
     # Return the Identification String of this Board
     def Ident(self):
+        """
+        @brief returns the Identification string of this board
+        @retval Ident String
+        """
         return self.Bus.Read_String(self.Address,Ident)
 
     # Retrun the Serial Number of this Board
     # TODO: use _NET method
     def Serial(self):
+        """
+        @brief returns the Serial Number of this board
+        @retval Serial Long
+        """
         ret,buf= self.Bus.Transaction(chr(self.Address+1)+chr(Serial),0x06)
         return struct.unpack(">L", buf[2:6])[0] 
 
     # Change the Address of this board, this can be done realtime and after calling this method
     # the objects instance will continue to communicate using the new address.
     def ChangeAddress(self, newaddress=None):
+        """
+        @brief change the address of the board, It will update all internal addressing so the object will continue to work after changing.
+        @param newaddress when set it will change to that address, if not It will retrun the board to it's default address.
+        """
         if newaddress == None:
             newaddress = self.DefaultAddress
         if self.Address != newaddress:            
@@ -463,31 +588,43 @@ class BitWizardLcd(BitWizardBase):
     # x = position >= 0
     # y = line >=0
     def SetCursor(self,x,y):
-        """Set Cursor position"""
+        """
+        @brief Set Cursor position
+        """
         self.Bus.Write_uInt8(self.Address,0x11,32*y+x)
 
     def Cls(self):
-        """Clear screen of LCD and reset the cursor to 0,0"""
+        """
+        @brief Clear screen of LCD and reset the cursor to 0,0
+        """
         self.Bus.Write_uInt8(self.Address,0x10,0x00)
 
     def Print(self,text = ""):
-        """Print text on the current cursor position"""
+        """
+        @brief Print text on the current cursor position
+        """
         self.Bus.Write_String(self.Address,0x00, text)
 
-    # Print text on given position, see SetCursor
+
     def PrintAt(self,x=0,y=0,text=''):
-        """Print text on the given x/y position"""
+        """
+        @brief Print text on the given x/y position
+        """
         self.SetCursor(x,y)
         self.Print(text)
 
     # Set the Contrast of the LCD
     def Contrast(self, value=128):
-        """Change LCD contrast, defaults to 128"""
+        """
+        @brief Change LCD contrast, defaults to 128
+        """
         self.Bus.Write_uInt8(self.Address,Contrast,value)
 
     # Set the BackLight of the LCD
     def Backlight(self, value = 128):
-        """Change the intensity of the backlight, Defaults to 128"""
+        """
+        @brief Change the intensity of the backlight, Defaults to 128
+        """
         self.Bus.Write_uInt8(self.Address,Backlight,value)
 
     # Initialize the LCD Controller
@@ -500,7 +637,9 @@ class BitWizardLcd(BitWizardBase):
 
     # Set Cursor Visible and make it blink or not
     def Cursor(self,on=True,blink=False):
-        """Show the cursor and/or set it to blink"""
+        """
+        @brief Show the cursor and/or set it to blink
+        """
         value = 8+4
         if on and blink:
             value+=1
@@ -511,7 +650,9 @@ class BitWizardLcd(BitWizardBase):
     # Set Cursor to the home position (0,0)
     
     def CursorHome(self):
-        """Move the cursor to 0,0 or HOME position"""
+        """
+        @brief Move the cursor to 0,0 or HOME position
+        """
         self.Bus.Write_uInt8(self.Address, 0x01, 0x02)
             
     def DefineChar(self,char, Data=[0,0,0,0,0,0,0,0]):
@@ -532,7 +673,8 @@ class BitWizardLcd(BitWizardBase):
         self.Bus.Transaction(chr(self.Address)+chr(0x00)+chr(0x1F)+chr(0x1F)+chr(0x1F)+chr(0x1F)+chr(0x1F)+chr(0x1F)+chr(0x1F)+chr(0x1F))
         
     def DisplayMode(self, cursormove=True,displayshift=False):
-        """Change the Display mode of the LCD
+        """
+        Change the Display mode of the LCD
         @todo: Does not work, Investigate odd behaviour of LCD                                
         """
         value=16
@@ -629,7 +771,6 @@ class DigitalIn(IOPin):
     def Get(self):
         """
         Get the current state of this pin.
-        @todo: implement (now just returns False)
         @retval Boolean, True for Input High, False for Input Low
         """
         return bool(self.Bus.Read_uInt8(self.Address, 0x40+self.Pin))        
@@ -657,7 +798,7 @@ class DigitalOut(IOPin):
         """
         Get the current state of this pin.
         @todo: implement (now just returns False)
-        @retval Boolean, True for Input High, False for Input Low
+        @retval Boolean True for Input High, False for Input Low
         """
         value=False
         return value
@@ -791,9 +932,9 @@ class IOPinBase():
     def SetPinConfig(self,pin, pintype, **kwargs):
         """
         Set or change the functionality of one IOPin.
-        @param pin Int: The Pinnummer on the board to Set/Change
+        @param pin Int: The Pinnummer on the board to Set/Change.
         @param pintype class: Can be any subclass of IOPin, like DigitalIn, DogitalOut, PWMOut, AnalogIn, MCP9700 etc. 
-        @param **kwargs: additional configuration passed to the __init__ when in instance of pintype is created.
+        @param kwargs list: additional configuration passed to the __init__ when in instance of pintype is created.
         """
         if self.Pins[pin]!=None:
             del self.Pins[pin]
@@ -973,7 +1114,7 @@ def SetAutoDetectUi(Ui):
 class LED7Segment(BitWizardBase):
     """
     @brief class representing the SPI_7Segment board.
-    @Todo: Investigate SetHex4 seems to influence the dots when d3=7 ??!?!?
+    @todo: Investigate SetHex4 seems to influence the dots when d3=7 ??!?!?
     """
 
     DefaultAddress = 0x96
@@ -1087,7 +1228,6 @@ class StepperMotor:
     """
     
     @brief: class for using the steppermotor functions on 7FET and MOTOR boards.
-    @todo: test well
     @todo: document
     @todo: test with MotorBoard
     @todo: change Bus.Transaction
@@ -1106,16 +1246,31 @@ class StepperMotor:
         self.SetStepDelay(StepDelay)
         print self.GetCurrentPosition()
         if CurrentPosition!=None:
-            print 'HUH?'
             self.SetCurrentPosition(CurrentPosition)
             
     def DegreeToSteps(self,Degree):
+        """
+        @brief Function to convert Degree's to steps, used internally
+        @param Degree 
+        @ retval int the amount of steps to make for the given Degree 
+        """
         return int(round(Degree*(self.Reduction/self.StepAngle/2)))
 
     def StepsToDegree(self,Steps):
+        """
+        @brief Function to convert steps to Degree's, used internally
+        @param Steps
+        @ retval int the amount of degrees to make rotated for the given steps 
+        """
         return int(round(Steps/(self.Reduction/self.StepAngle/2)))
     
     def SetCurrentPosition(self,pos):
+        """
+        @brief Set the current position, at startup (power on) the CurrentPosition == 0
+        @param Position set the internal Current
+        @ retval int the amount of steps to make for the given Degree 
+        """
+
         if self.Reverse: pos*=-1
         self.Bus.Transaction(chr(self.Address)+chr(0x40)+struct.pack('@l',pos))
 
@@ -1195,7 +1350,7 @@ if __name__ == "__main__":
     s.StepperInit(5.625,64)
     print s.GetCurrentPosition()
 
-    s.SetCurrentPosition(0)
- #   s.SetCurrentPosition(360)
+    #s.SetCurrentPosition(0)
+    s.SetCurrentPosition(360)
     print s.GetCurrentPosition()
     

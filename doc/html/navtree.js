@@ -1,6 +1,7 @@
 var NAVTREE =
 [
   [ "BitWizardLib", "index.html", [
+    [ "BitWizardLib introduction", "index.html", null ],
     [ "Todo List", "todo.html", null ],
     [ "Package Functions", "namespacemembers.html", [
       [ "All", "namespacemembers.html", null ],
@@ -19,15 +20,16 @@ var NAVTREE =
     ] ],
     [ "Files", null, [
       [ "File List", "files.html", "files" ]
-    ] ]
+    ] ],
+    [ "Examples", "examples.html", "examples" ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
 "annotated.html",
-"classBitWizard_1_1bw_1_1IOPinBase.html#a8aeaf0cd4898178c561573532ed82d17",
-"classBitWizard_1_1bw_1_1SPI.html#a74b73681af92aab2f4c56db3631ef59a"
+"classBitWizard_1_1bw_1_1IOPinBase.html#a42402da11baad69babf49376d215d342",
+"classBitWizard_1_1bw_1_1SPI.html#a56f842c6acc1e85521d868987cc5483f"
 ];
 
 var navTreeSubIndices = new Array();

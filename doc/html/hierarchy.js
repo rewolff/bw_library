@@ -30,8 +30,10 @@ var hierarchy =
       [ "Relay", "classBitWizard_1_1bw_1_1Relay.html", null ],
       [ "Servo", "classBitWizard_1_1bw_1_1Servo.html", null ]
     ] ],
+    [ "Daemon", "classBitWizard_1_1daemon_1_1Daemon.html", null ],
     [ "SPI.Device", "classBitWizard_1_1bw_1_1SPI_1_1Device.html", null ],
     [ "I2C.Device", "classBitWizard_1_1bw_1_1I2C_1_1Device.html", null ],
+    [ "EditHex", "classBitWizard_1_1ui_1_1EditHex.html", null ],
     [ "IOPin", "classBitWizard_1_1bw_1_1IOPin.html", [
       [ "AnalogIn", "classBitWizard_1_1bw_1_1AnalogIn.html", [
         [ "MCP9700", "classBitWizard_1_1bw_1_1MCP9700.html", null ]
@@ -50,6 +52,8 @@ var hierarchy =
       [ "RPi_Ui_16x2", "classBitWizard_1_1bw_1_1RPi__Ui__16x2.html", null ],
       [ "RPi_Ui_20x4", "classBitWizard_1_1bw_1_1RPi__Ui__20x4.html", null ]
     ] ],
+    [ "Menu", "classBitWizard_1_1ui_1_1Menu.html", null ],
+    [ "MenuItem", "classBitWizard_1_1ui_1_1MenuItem.html", null ],
     [ "NET", "classBitWizard_1_1bw_1_1NET.html", [
       [ "I2C", "classBitWizard_1_1bw_1_1I2C.html", null ],
       [ "SPI", "classBitWizard_1_1bw_1_1SPI.html", null ]

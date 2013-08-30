@@ -5,11 +5,13 @@ var searchData=
   ['serial',['Serial',['../classBitWizard_1_1bw_1_1BitWizardBase.html#a87e1f85301a85cf1c1eec5ec8ef326b0',1,'BitWizard::bw::BitWizardBase']]],
   ['set',['Set',['../classBitWizard_1_1bw_1_1DigitalOut.html#ad572bfb5882f34d434f6b8dcf6362cc3',1,'BitWizard.bw.DigitalOut.Set()'],['../classBitWizard_1_1bw_1_1PWMOut.html#ad572bfb5882f34d434f6b8dcf6362cc3',1,'BitWizard.bw.PWMOut.Set()']]],
   ['setalloutputs',['SetAllOutputs',['../classBitWizard_1_1bw_1_1DIO.html#adf2ba15b438e062676e7d36498178f78',1,'BitWizard::bw::DIO']]],
+  ['setautodetectlcd',['SetAutodetectLCD',['../namespaceBitWizard_1_1bw.html#a5c641bb5732c9f25fe92f1ae63e8667e',1,'BitWizard::bw']]],
+  ['setautodetectui',['SetAutoDetectUi',['../namespaceBitWizard_1_1bw.html#a452ca910d27516c2c696189736d59c00',1,'BitWizard::bw']]],
   ['setbitmap1',['SetBitmap1',['../classBitWizard_1_1bw_1_1LED7Segment.html#aa7b4831b3af4a491d92a37f63617c737',1,'BitWizard::bw::LED7Segment']]],
   ['setbitmap4',['SetBitmap4',['../classBitWizard_1_1bw_1_1LED7Segment.html#ac25feb882d8e23ccc5773568a2071ecf',1,'BitWizard::bw::LED7Segment']]],
   ['setbits',['SetBits',['../classBitWizard_1_1bw_1_1SPI.html#a7b3de4a95e6a0b9e3a0791ef13dbdafa',1,'BitWizard::bw::SPI']]],
   ['setcurrentposition',['SetCurrentPosition',['../classBitWizard_1_1bw_1_1StepperMotor.html#af78ec4b725afca85be4e6d90a3458011',1,'BitWizard::bw::StepperMotor']]],
-  ['setcursor',['SetCursor',['../classBitWizard_1_1bw_1_1BitWizardLcd.html#a3328e15726db2db4cb279d29f61c2f6f',1,'BitWizard::bw::BitWizardLcd']]],
+  ['setcursor',['SetCursor',['../classBitWizard_1_1bw_1_1BitWizardLcd.html#a3328e15726db2db4cb279d29f61c2f6f',1,'BitWizard.bw.BitWizardLcd.SetCursor()'],['../classBitWizard_1_1ui_1_1EditHex.html#a3328e15726db2db4cb279d29f61c2f6f',1,'BitWizard.ui.EditHex.SetCursor()']]],
   ['sethex1',['SetHex1',['../classBitWizard_1_1bw_1_1LED7Segment.html#a7c9a720933acebda2b8dd1257c1c7b7b',1,'BitWizard::bw::LED7Segment']]],
   ['sethex4',['SetHex4',['../classBitWizard_1_1bw_1_1LED7Segment.html#a8889e3874006f869c66839a9566ff23d',1,'BitWizard::bw::LED7Segment']]],
   ['setinputoutput',['SetInputOutput',['../classBitWizard_1_1bw_1_1IOPinBase.html#a177dc1a7dd760dffbd91f75301fbfd0f',1,'BitWizard::bw::IOPinBase']]],
@@ -21,6 +23,9 @@ var searchData=
   ['setstepdelay',['SetStepDelay',['../classBitWizard_1_1bw_1_1StepperMotor.html#a991c4a296065e485b6a1e811dd2af12d',1,'BitWizard::bw::StepperMotor']]],
   ['settargetdegree',['SetTargetDegree',['../classBitWizard_1_1bw_1_1StepperMotor.html#a77120caad900e16028138e2ae2041b1a',1,'BitWizard::bw::StepperMotor']]],
   ['settargetposition',['SetTargetPosition',['../classBitWizard_1_1bw_1_1StepperMotor.html#af6c0ee4e1c494d7c13dfb3df5682ef0f',1,'BitWizard::bw::StepperMotor']]],
+  ['show',['Show',['../classBitWizard_1_1ui_1_1EditHex.html#a15f74ef9e5839da47f8cff2694de4378',1,'BitWizard.ui.EditHex.Show()'],['../classBitWizard_1_1ui_1_1MenuItem.html#a15f74ef9e5839da47f8cff2694de4378',1,'BitWizard.ui.MenuItem.Show()'],['../classBitWizard_1_1ui_1_1Menu.html#a15f74ef9e5839da47f8cff2694de4378',1,'BitWizard.ui.Menu.Show()']]],
+  ['start',['start',['../classBitWizard_1_1daemon_1_1Daemon.html#a648d0fef4ece33dd7a8b9fc0d076cd9d',1,'BitWizard::daemon::Daemon']]],
   ['stepperinit',['StepperInit',['../classBitWizard_1_1bw_1_1StepperMotor.html#a1911644b7ba8132967b01a2d309dcdab',1,'BitWizard::bw::StepperMotor']]],
-  ['stepstodegree',['StepsToDegree',['../classBitWizard_1_1bw_1_1StepperMotor.html#abe1304ad492d702e9bd6d9976eeb11d6',1,'BitWizard::bw::StepperMotor']]]
+  ['stepstodegree',['StepsToDegree',['../classBitWizard_1_1bw_1_1StepperMotor.html#abe1304ad492d702e9bd6d9976eeb11d6',1,'BitWizard::bw::StepperMotor']]],
+  ['stop',['stop',['../classBitWizard_1_1daemon_1_1Daemon.html#af128d3e14b78a3c8bb53e55a3932fade',1,'BitWizard::daemon::Daemon']]]
 ];

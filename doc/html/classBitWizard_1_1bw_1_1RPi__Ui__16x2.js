@@ -22,6 +22,7 @@ var classBitWizard_1_1bw_1_1RPi__Ui__16x2 =
     [ "ReadOne", "classBitWizard_1_1bw_1_1RPi__Ui__16x2.html#a471ef6073fc6a43c5e9fcec09d7fecfe", null ],
     [ "ReadOneInv", "classBitWizard_1_1bw_1_1RPi__Ui__16x2.html#a3e7efda7b1f48e6faced00e32f8b79e4", null ],
     [ "ReportPressed", "classBitWizard_1_1bw_1_1RPi__Ui__16x2.html#a99c1192edd15deec8531a510d95ed6c6", null ],
+    [ "ReportPressedOnce", "classBitWizard_1_1bw_1_1RPi__Ui__16x2.html#ace44dabf590f1dc81b3b154fda6e179d", null ],
     [ "Serial", "classBitWizard_1_1bw_1_1RPi__Ui__16x2.html#a87e1f85301a85cf1c1eec5ec8ef326b0", null ],
     [ "Serial", "classBitWizard_1_1bw_1_1RPi__Ui__16x2.html#a87e1f85301a85cf1c1eec5ec8ef326b0", null ],
     [ "SetCursor", "classBitWizard_1_1bw_1_1RPi__Ui__16x2.html#a3328e15726db2db4cb279d29f61c2f6f", null ],

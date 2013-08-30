@@ -45,6 +45,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="examples.html"><span>Examples</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -130,8 +131,11 @@ $(document).ready(function(){initNavTree('classBitWizard_1_1bw_1_1Fet3.html','')
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ac775ee34451fdfa742b318538164070e"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBitWizard_1_1bw_1_1Fet3.html#ac775ee34451fdfa742b318538164070e">__init__</a></td></tr>
 <tr class="memitem:a1d888236c7d9b370858b6d582d0d5387"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBitWizard_1_1bw_1_1BitWizardBase.html#a1d888236c7d9b370858b6d582d0d5387">Ident</a></td></tr>
+<tr class="memdesc:a1d888236c7d9b370858b6d582d0d5387"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the Identification string of this board  <a href="#a1d888236c7d9b370858b6d582d0d5387"></a><br/></td></tr>
 <tr class="memitem:a87e1f85301a85cf1c1eec5ec8ef326b0"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBitWizard_1_1bw_1_1BitWizardBase.html#a87e1f85301a85cf1c1eec5ec8ef326b0">Serial</a></td></tr>
+<tr class="memdesc:a87e1f85301a85cf1c1eec5ec8ef326b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the Serial Number of this board  <a href="#a87e1f85301a85cf1c1eec5ec8ef326b0"></a><br/></td></tr>
 <tr class="memitem:aa1d1dedc19c0ffdc67fae3687dfac4fb"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBitWizard_1_1bw_1_1BitWizardBase.html#aa1d1dedc19c0ffdc67fae3687dfac4fb">ChangeAddress</a></td></tr>
+<tr class="memdesc:aa1d1dedc19c0ffdc67fae3687dfac4fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">change the address of the board, It will update all internal addressing so the object will continue to work after changing.  <a href="#aa1d1dedc19c0ffdc67fae3687dfac4fb"></a><br/></td></tr>
 <tr class="memitem:aaaab392085c2116a8e207493073dca2d"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBitWizard_1_1bw_1_1IOPinBase.html#aaaab392085c2116a8e207493073dca2d">DoPinConfig</a></td></tr>
 <tr class="memitem:a40b3b938faa186423b193bd2b7be8223"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBitWizard_1_1bw_1_1IOPinBase.html#a40b3b938faa186423b193bd2b7be8223">SetPinConfig</a></td></tr>
 <tr class="memdesc:a40b3b938faa186423b193bd2b7be8223"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set or change the functionality of one <a class="el" href="classBitWizard_1_1bw_1_1IOPin.html" title="Base class for implementing basic interfaces to IOPins on BitWizard Boards.">IOPin</a>.  <a href="#a40b3b938faa186423b193bd2b7be8223"></a><br/></td></tr>
@@ -225,6 +229,12 @@ Static Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">newaddress</td><td>when set it will change to that address, if not It will retrun the board to it's default address. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -273,6 +283,12 @@ Static Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">Ident</td><td>String </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -345,6 +361,12 @@ Static Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">Serial</td><td>Long </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -433,9 +455,9 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">pin</td><td>Int: The Pinnummer on the board to Set/Change </td></tr>
+    <tr><td class="paramname">pin</td><td>Int: The Pinnummer on the board to Set/Change. </td></tr>
     <tr><td class="paramname">pintype</td><td>class: Can be any subclass of <a class="el" href="classBitWizard_1_1bw_1_1IOPin.html" title="Base class for implementing basic interfaces to IOPins on BitWizard Boards.">IOPin</a>, like <a class="el" href="classBitWizard_1_1bw_1_1DigitalIn.html" title="Base class for communicating Digital Input Pins.">DigitalIn</a>, DogitalOut, <a class="el" href="classBitWizard_1_1bw_1_1PWMOut.html" title="class representing an IOPin used for PWM output">PWMOut</a>, <a class="el" href="classBitWizard_1_1bw_1_1AnalogIn.html" title="Base class for communicating Analog Input Pins.">AnalogIn</a>, <a class="el" href="classBitWizard_1_1bw_1_1MCP9700.html" title="class representing an MCP9700 temperature Sensor to an AnalogIn IOPin">MCP9700</a> etc. </td></tr>
-    <tr><td class="paramname">**kwargs,:</td><td>additional configuration passed to the <b>init</b> when in instance of pintype is created. </td></tr>
+    <tr><td class="paramname">kwargs</td><td>list: additional configuration passed to the <b>init</b> when in instance of pintype is created. </td></tr>
   </table>
   </dd>
 </dl>
@@ -709,7 +731,7 @@ Static Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceBitWizard.html">BitWizard</a></li><li class="navelem"><a class="el" href="namespaceBitWizard_1_1bw.html">bw</a></li><li class="navelem"><a class="el" href="classBitWizard_1_1bw_1_1Fet3.html">Fet3</a></li>
-    <li class="footer">Generated on Thu May 30 2013 16:21:05 for BitWizardLib by
+    <li class="footer">Generated on Fri Aug 30 2013 17:35:35 for BitWizardLib by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.1.2 </li>
   </ul>
