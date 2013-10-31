@@ -49,16 +49,12 @@ class fms6501a(object):
                 self.ClampBit= 2**(self.Pin-9) * Clamp
                 for inp in range(9,13):
                     data+=self.Parent.Input[inp].ClampBit
-
                 register = 0x1D
             else:
                 self.ClampBit= 2**(self.Pin-1) * Clamp
                 for inp in range(1,9):
                     data+=self.Parent.Input[inp].ClampBit
-                    print self.Parent.Input[inp].ClampBit
                 register= 0x1E
-            print bin(data)
-            print self.ClampBit
             self.Parent.Bus.Write_uInt8(self.Parent.Address, register, data)
                         
     class _Output(object):
@@ -82,7 +78,7 @@ class fms6501a(object):
             self._Update()
 
         def Disable(self):
-            self._Enable=True
+            self._Enable=False
             self._Update()
 
         def Gain(self,Gain):
