@@ -1213,9 +1213,9 @@ class Fet3(BitWizardBase,IOPinBase):
     DefaultAddress = 0x8A
     IOPins = 3
     PinConfig = {}
-    PinConfig[0] = {'device':PWMOut}
-    PinConfig[1] = {'device':PWMOut}
-    PinConfig[2] = {'device':PWMOut}
+    PinConfig[0] = {'device':DigitalOut}
+    PinConfig[1] = {'device':DigitalOut}
+    PinConfig[2] = {'device':DigitalOut}
 
     def __init__(self,bus, Address=None):
         BitWizardBase.__init__(self,bus,Address)
@@ -1327,13 +1327,13 @@ class Fet7(BitWizardBase,IOPinBase,StepperMotor):
     DefaultAddress = 0x88
     IOPins = 7
     PinConfig={}
-    PinConfig[0] = {'device':PWMOut}
-    PinConfig[1] = {'device':PWMOut}
-    PinConfig[2] = {'device':PWMOut}
-    PinConfig[3] = {'device':PWMOut}
-    PinConfig[4] = {'device':PWMOut}
-    PinConfig[5] = {'device':PWMOut}
-    PinConfig[6] = {'device':PWMOut}
+    PinConfig[0] = {'device':DigitalOut}
+    PinConfig[1] = {'device':DigitalOut}
+    PinConfig[2] = {'device':DigitalOut}
+    PinConfig[3] = {'device':DigitalOut}
+    PinConfig[4] = {'device':DigitalOut}
+    PinConfig[5] = {'device':DigitalOut}
+    PinConfig[6] = {'device':DigitalOut}
 
     def __init__(self,bus, Address=None):
         BitWizardBase.__init__(self,bus,Address)
