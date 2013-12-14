@@ -57,8 +57,9 @@ class EditHex():
                 return None
             if b[self.menu.ButtonEnter]:
                 return int(self.value,16)
+            while True in self.menu.Buttons.ReportPressed():pass
+            sleep(.5)
             b=self.menu.Buttons.ReportPressed()
-            sleep(.2)
 
 class MenuItem():
     def __init__(self,text ='', action = None,DisplayInit=True,value = None):

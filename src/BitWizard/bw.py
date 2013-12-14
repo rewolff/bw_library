@@ -69,7 +69,7 @@ class NETPnp(object):
         self.UDPSocket.bind(('',self.Port))
         while True:
             Message,Address = self.UDPSocket.recvfrom(1024)
-            print Address, Message
+            #print Address, Message
             if Message == 'BitWizardNet':
                 pass
             self.UDPSocket.sendto('BWNET',Address)
@@ -355,10 +355,7 @@ class I2C(_Bus,NET):
 
     def Transaction(self, OutBuffer,read=0):
         if read!=0:
-            try:
-                return 0,'  '+''.join([chr(m) for m in self.I2cBus.read_i2c_block_data((ord(OutBuffer[0])>>1),ord(OutBuffer[1]))])
-            except IOError:
-                return 0,"  "
+            return 0,'  '+''.join([chr(m) for m in self.I2cBus.read_i2c_block_data((ord(OutBuffer[0])>>1),ord(OutBuffer[1]))])
         else:
             self.I2cBus.write_i2c_block_data(ord(OutBuffer[0])>>1  ,ord(OutBuffer[1]), [ord(m) for m in OutBuffer[2:]])           
             return 0,None
@@ -480,7 +477,7 @@ class SPI(_Bus,NET):
         Transaction.bits_per_word = self.Bits
         Transaction.cs_change = 0
         Transaction.pad = 0
-        print type(addressof(Transaction))
+ #       print type(addressof(Transaction))
         ret = ioctl(self.File,SPI_IOC_MESSAGE(1), addressof(Transaction))
         return ret, ReceiveBuffer
 
@@ -1244,7 +1241,7 @@ class StepperMotor:
         for p in range(4):
             self.SetPinConfig(p,StepperMotor.StepperPin)
         self.SetStepDelay(StepDelay)
-        print self.GetCurrentPosition()
+        #print self.GetCurrentPosition()
         if CurrentPosition!=None:
             self.SetCurrentPosition(CurrentPosition)
             

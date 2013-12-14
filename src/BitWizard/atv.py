@@ -1,4 +1,5 @@
 from ctypes import c_uint16
+import json
 
 class sp5055(object):
     """
@@ -35,6 +36,40 @@ class fms6501a(object):
     Gain9db=0x60
     InputClamp = 0
     InputBias = 1
+
+    def SafeDefaults(self,filename='MatrixDefaults.json'):
+        Defaults={}
+        Defaults['inputs']=[]
+        Defaults['outputs']=[]
+        for i in self.Input:
+            Defaults['inputs'].append({'Input':i,
+                                       'Clamp':self.Input[i].ClampBit})
+        for i in self.Output:
+            Defaults['outputs'].append({'Output':i,
+                                        'Enable':self.Output[i]._Enable,
+                                        'Gain': self.Output[i]._Gain,
+                                        'Source' :self.Output[i]._Source})
+        f = open(filename,'w')
+        json.dump(Defaults,f)
+        f.close()
+
+    def LoadDefaults(self,filename='MatrixDefaults.json'):
+        try:
+            f=open(filename,'r')
+            Defaults=json.load(f)
+            f.close()
+            Loaded=True
+        except:
+            Loaded=False
+        if Loaded:
+            for i in Defaults['inputs']:
+                self.Input[i['Input']].SetClamp(i['Clamp'])
+            for i in Defaults['outputs']:
+                self.Output[i['Output']]._Enable = i['Enable']
+                self.Output[i['Output']]._Gain = i['Gain']
+                self.Output[i['Output']]._Source = i['Source']
+                self.Output[i['Output']]._Update()
+
     
     class _Input(object):
         def __init__(self, Pin, parent):
@@ -44,22 +79,21 @@ class fms6501a(object):
 
         def SetClamp(self, Clamp):
             data=0
-            print self.Pin
             if self.Pin > 8:
                 self.ClampBit= 2**(self.Pin-9) * Clamp
                 for inp in range(9,13):
                     data+=self.Parent.Input[inp].ClampBit
-                register = 0x1D
+                register = 0x1E
             else:
                 self.ClampBit= 2**(self.Pin-1) * Clamp
                 for inp in range(1,9):
                     data+=self.Parent.Input[inp].ClampBit
-                register= 0x1E
+                register= 0x1D
             self.Parent.Bus.Write_uInt8(self.Parent.Address, register, data)
                         
     class _Output(object):
 
-        def __init__(self, Out, parent, Enable=False, Gain=0x00, Source=0):
+        def __init__(self, Out, parent, Enable=False, Gain=0x00, Source=1):
             self.Register = Out        
             self._Enable = Enable
             self._Gain = Gain
@@ -99,6 +133,7 @@ class fms6501a(object):
             self.Output[i]=self._Output(i, self)
         for i in range(1,self._inputs+1):
             self.Input[i]=self._Input(i, self)
+        self.LoadDefaults()
 
 if __name__ == "__main__":
     from BitWizard.bw import I2C
