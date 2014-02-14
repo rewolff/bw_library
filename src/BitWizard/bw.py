@@ -355,7 +355,10 @@ class I2C(_Bus,NET):
 
     def Transaction(self, OutBuffer,read=0):
         if read!=0:
-            return 0,'  '+''.join([chr(m) for m in self.I2cBus.read_i2c_block_data((ord(OutBuffer[0])>>1),ord(OutBuffer[1]))])
+            try:
+                return 0,'  '+''.join([chr(m) for m in self.I2cBus.read_i2c_block_data((ord(OutBuffer[0])>>1),ord(OutBuffer[1]))])
+            except IOError:
+                return 0,'  '+''.join([chr(m) for m in self.I2cBus.read_i2c_block_data((ord(OutBuffer[0])>>1),ord(OutBuffer[1]))])
         else:
             self.I2cBus.write_i2c_block_data(ord(OutBuffer[0])>>1  ,ord(OutBuffer[1]), [ord(m) for m in OutBuffer[2:]])           
             return 0,None
