@@ -26,6 +26,7 @@ import posix
 from time import sleep
 import socket
 import threading
+from datetime import *
 
 # Try to import SMBus, module is NOT needed if I2C is not used
 try:
@@ -389,7 +390,9 @@ class I2C(_Bus,NET):
         self.Devices[Address]=I2C.Device(Address,InUseBy=InUseBy,Bus=self)
 
 
-
+#class I2C_Muxer(I2C()):
+#    def __init__(self,bus, address=None):
+#        pass
 
 class SPI(_Bus,NET):
     """class respresenting an SPI Bus"""
@@ -583,10 +586,8 @@ class BitWizardBase(object):
 class BitWizardLcd(BitWizardBase):
     DefaultAddress = 0x82
     Cursor = "Off" #Blink, On
-
-    # Set cursor to Position
-    # x = position >= 0
-    # y = line >=0
+    _Backlight = 128
+        
     def SetCursor(self,x,y):
         """
         @brief Set Cursor position
@@ -625,6 +626,7 @@ class BitWizardLcd(BitWizardBase):
         """
         @brief Change the intensity of the backlight, Defaults to 128
         """
+        if value > 0 : self._Backlight = value
         self.Bus.Write_uInt8(self.Address,Backlight,value)
 
     # Initialize the LCD Controller
@@ -1047,43 +1049,68 @@ class PushButtons_4(BitWizardPushButtons):
 
 class Ui_PushButtons(BitWizardPushButtons):
     PushButtons=6
+    TimedOut = False
+    _LastButtonPress = datetime.now()
+    _BacklightTimeout = 0
 
-class RPi_Ui_20x4(LCD_20x4,Ui_PushButtons,IOPinBase):
+    def SetBacklightTimeout(self,Timeout):
+        """
+        @brief Set the timeout for the display Backlight, works for UI
+        """
+        self._BacklightTimeout = Timeout
+
+    def ReportPressed(self):
+        """
+        @brief Pushbutton ReportPressed to dim the backlight on RPi_Ui (Overide of BitWizardPushButtons.ReportPressed)
+        """
+        Buttons = BitWizardPushButtons.ReportPressed(self)
+        if True in Buttons:
+            if self.TimedOut:
+                self.TimedOut=False
+                self.Backlight(self._Backlight)
+                Buttons = [False,False,False,False,False,False]            
+            self._LastButtonPress = datetime.now()
+        else:
+            if self._BacklightTimeout > 0 and datetime.now() > self._LastButtonPress+timedelta(minutes=self._BacklightTimeout):
+                self.TimedOut=True
+                self.Backlight(0)
+        return Buttons 
+        
+class RPi_Ui(Ui_PushButtons,IOPinBase):
     """
-    @brief class representing the RPi_Ui_20x4 board for Raspberry Pi
+    @brief Base class representing the RPi_Ui_20x4/16x2 boards for Raspberry Pi
     """
-    IOPins=2
+
     DefaultAddress = 0x94
+    IOPins=2
     IODevice = _ATMega
     ADSamples = 4096
     ADBitshift = 6
     PinConfig={0:{"device":MCP9700,'property':'IntTemp'},1:{"device":AnalogIn,"vref":1,'property':'ExtAnalog'}}
 
+
+
     def __init__(self,*args,**kwargs):
         BitWizardBase.__init__(self,*args,**kwargs)
         IOPinBase.__init__(self)
     
+
+class RPi_Ui_20x4(LCD_20x4,RPi_Ui):
+    """
+    @brief class representing the RPi_Ui_20x4 board for Raspberry Pi
+    """
+    pass
+
 SPI.DeviceList["spi_rpi_ui"]= RPi_Ui_20x4     
 I2C.DeviceList["i2c_rpi_ui"]= RPi_Ui_20x4     
 
     
 
-class RPi_Ui_16x2(LCD_16x2,Ui_PushButtons, IOPinBase):
+class RPi_Ui_16x2(LCD_16x2,RPi_Ui):
     """
     @brief class representing the RPi_Ui_16x2 board for Raspberry Pi.
     """
-
-    DefaultAddress = 0x94
-    IOPins=2
-    DefaultAddress = 0x94
-    IODevice = _ATMega
-    ADSamples = 4096
-    ADBitshift = 6
-    PinConfig={0:{"device":MCP9700,'property':'IntTemp'},1:{"device":AnalogIn,"vref":1,'property':'ExtAnalog'}}
-
-    def __init__(self,*args,**kwargs):
-        BitWizardBase.__init__(self,*args,**kwargs)
-        IOPinBase.__init__(self)
+    pass
 
 #SPI.DeviceList["spi_rpi_ui"]= RPi_Ui_16x2     
 # Impossible to tell which LCD is connected during .
