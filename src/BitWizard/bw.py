@@ -399,6 +399,7 @@ class I2C_Muxer(list):
     """
 
     class muxbus(I2C):
+        
         def __init__(self,bus,busindex,muxeraddress):
             self.I2cBus=bus.I2cBus
             self.Bus = bus
@@ -407,18 +408,18 @@ class I2C_Muxer(list):
 
         def Transaction(self,Outbuffer,read=0):
             self.I2cBus.write_byte(self.MuxerAddress,self.ControlByte)
-            print 'muxer transaction',self.ControlByte
             return self.Bus.Transaction(Outbuffer, read)
             
 
-    Address = 0x77
+    DefaultAddress = 0x77
 
     def __init__(self,bus, address=None,):
         self.Bus = bus
         if address != None:
             self.Address = address
+        else:
+            self.Address = self.DefaultAddress
         for i in range(0,8):
-            print 'adding bus',i,2**i
             self.append(self.muxbus(bus,i,self.Address))
 
 
