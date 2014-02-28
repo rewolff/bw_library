@@ -368,14 +368,17 @@ class I2C(_Bus,NET):
     # TODO: change Transaction to _Bus.Read_String
     #
     def scan(self,Display=None,line=0):
-        for i in range(0x00,0xFF,0x02):
-            ret, buf = self.Transaction(chr(i)+chr(Ident),0x20)
 
+        for i in range(0x00,0xFF,0x02):
             Identification =""
-            for c in buf[2:]:
-                if ord(c)==0: break
-                if ord(c) in range(32,127):
-                    Identification +=c
+            try:
+                ret, buf = self.Transaction(chr(i)+chr(Ident),0x20)
+                for c in buf[2:]:
+                    if ord(c)==0: break
+                    if ord(c) in range(32,127):
+                        Identification +=c
+            except IOError:
+                pass
 
             if Identification != "":
                 if i in self.Devices:
@@ -390,9 +393,37 @@ class I2C(_Bus,NET):
         self.Devices[Address]=I2C.Device(Address,InUseBy=InUseBy,Bus=self)
 
 
-#class I2C_Muxer(I2C()):
-#    def __init__(self,bus, address=None):
-#        pass
+class I2C_Muxer(list):
+    """
+    @brief Object representing the I2 Muxer board
+    """
+
+    class muxbus(I2C):
+        def __init__(self,bus,busindex,muxeraddress):
+            self.I2cBus=bus.I2cBus
+            self.Bus = bus
+            self.MuxerAddress=muxeraddress
+            self.ControlByte = 2**busindex
+
+        def Transaction(self,Outbuffer,read=0):
+            self.I2cBus.write_byte(self.MuxerAddress,self.ControlByte)
+            print 'muxer transaction',self.ControlByte
+            return self.Bus.Transaction(Outbuffer, read)
+            
+
+    Address = 0x77
+
+    def __init__(self,bus, address=None,):
+        self.Bus = bus
+        if address != None:
+            self.Address = address
+        for i in range(0,8):
+            print 'adding bus',i,2**i
+            self.append(self.muxbus(bus,i,self.Address))
+
+
+        
+        
 
 class SPI(_Bus,NET):
     """class respresenting an SPI Bus"""
