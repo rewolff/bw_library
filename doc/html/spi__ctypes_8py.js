@@ -1,0 +1,27 @@
+var spi__ctypes_8py =
+[
+    [ "spi_ioc_transfer", "classBitWizard_1_1spi__ctypes_1_1spi__ioc__transfer.html", null ],
+    [ "SPI_IOC_MESSAGE", "spi__ctypes_8py.html#a68bfca14ab947997ab8ce470c0cec7aa", null ],
+    [ "SPI_MSGSIZE", "spi__ctypes_8py.html#abaac6b1d200eb575bc4ca977bf020e97", null ],
+    [ "SPI_3WIRE", "spi__ctypes_8py.html#ad6129a0f6dcb86a87a1669078e7673b4", null ],
+    [ "SPI_CPHA", "spi__ctypes_8py.html#aab7d7ad260daef06fdc69bd5511a9f03", null ],
+    [ "SPI_CPOL", "spi__ctypes_8py.html#ab548a22b28d3718bd9bf7f5da0956f53", null ],
+    [ "SPI_CS_HIGH", "spi__ctypes_8py.html#a5d979b1eb2f74c9ca5d2390ce8ba14de", null ],
+    [ "SPI_IOC_MAGIC", "spi__ctypes_8py.html#a3f86151368658672f25ff6276642bd40", null ],
+    [ "SPI_IOC_RD_BITS_PER_WORD", "spi__ctypes_8py.html#a0cf3b2503e0fb108cf760b427e64fd37", null ],
+    [ "SPI_IOC_RD_LSB_FIRST", "spi__ctypes_8py.html#a2c9506534cee82d778da025f3bd4c4c3", null ],
+    [ "SPI_IOC_RD_MAX_SPEED_HZ", "spi__ctypes_8py.html#a72c9b14b125eb7202e5ff7393f15d5c8", null ],
+    [ "SPI_IOC_RD_MODE", "spi__ctypes_8py.html#a41125ba566f57508cd9402cf64ca1fb8", null ],
+    [ "SPI_IOC_WR_BITS_PER_WORD", "spi__ctypes_8py.html#a5a952f8c2ab95bb7eb28b2b3c51d1988", null ],
+    [ "SPI_IOC_WR_LSB_FIRST", "spi__ctypes_8py.html#a6bfbf2c79c9b921d7adb8b413461d063", null ],
+    [ "SPI_IOC_WR_MAX_SPEED_HZ", "spi__ctypes_8py.html#aa9171406a04f04afb6291aa7ee4bebb6", null ],
+    [ "SPI_IOC_WR_MODE", "spi__ctypes_8py.html#afc7b04ddaf1d870782f50081d27125bd", null ],
+    [ "SPI_LOOP", "spi__ctypes_8py.html#a3dea3d56aae102da58d1630c80c40907", null ],
+    [ "SPI_LSB_FIRST", "spi__ctypes_8py.html#a3be5d72d0c767a8bb536acce2cf785c5", null ],
+    [ "SPI_MODE_0", "spi__ctypes_8py.html#a48df5eef5dea4f9813b23405ba99e3c2", null ],
+    [ "SPI_MODE_1", "spi__ctypes_8py.html#a846c98f8418ef61ca1088eddbe47eb5e", null ],
+    [ "SPI_MODE_2", "spi__ctypes_8py.html#ac6ac99c66126dc70976c7d0509cd8fe7", null ],
+    [ "SPI_MODE_3", "spi__ctypes_8py.html#aed08d614d60dc5169cbe4e5d04bc642f", null ],
+    [ "SPI_NO_CS", "spi__ctypes_8py.html#aaf8947ebf67426e147176a4104a5d085", null ],
+    [ "SPI_READY", "spi__ctypes_8py.html#a91ec7bfd9908d4d3251db952b8c03a76", null ]
+];
