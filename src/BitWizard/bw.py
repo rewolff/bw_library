@@ -619,6 +619,7 @@ class BitWizardLcd(BitWizardBase):
     DefaultAddress = 0x82
     Cursor = "Off" #Blink, On
     _Backlight = 128
+    _Contrast = 128
         
     def SetCursor(self,x,y):
         """
@@ -651,7 +652,8 @@ class BitWizardLcd(BitWizardBase):
         """
         @brief Change LCD contrast, defaults to 128
         """
-        self.Bus.Write_uInt8(self.Address,Contrast,value)
+        if value > 0 : self._Contrast = value
+        self.Bus.Write_uInt8(self.Address,Contrast,self._Contrast)
 
     # Set the BackLight of the LCD
     def Backlight(self, value = 128):
